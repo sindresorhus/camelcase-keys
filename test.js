@@ -1,7 +1,7 @@
 import test from 'ava';
-import camelcaseKeys from './';
+import fn from './';
 
-test('camelcase keys', t => {
-	t.ok(camelcaseKeys({'foo-bar': true}).fooBar);
+test(t => {
+	t.true(fn({'foo-bar': true}).fooBar);
 	t.end();
 });

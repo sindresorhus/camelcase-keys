@@ -42,7 +42,7 @@
     "convert"
   ],
   "devDependencies": {
-    "ava": "^0.3.0",
+    "ava": "*",
     "xo": "*"
   },
   "dependencies": {
