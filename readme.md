@@ -5,7 +5,7 @@
 
 ## Install
 
-```sh
+```
 $ npm install --save camelcase-keys
 ```
 
@@ -13,13 +13,13 @@ $ npm install --save camelcase-keys
 ## Usage
 
 ```js
-var camelcaseKeys = require('camelcase-keys');
+const camelcaseKeys = require('camelcase-keys');
 
 camelcaseKeys({'foo-bar': true});
 //=> {fooBar: true}
 
 
-var argv = require('minimist')(process.argv.slice(2));
+const argv = require('minimist')(process.argv.slice(2));
 //=> {_: [], 'foo-bar': true}
 
 camelcaseKeys(argv);

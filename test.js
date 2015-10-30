@@ -1,8 +1,7 @@
-'use strict';
-var test = require('ava');
-var camelcaseKeys = require('./');
+import test from 'ava';
+import fn from './';
 
-test(function (t) {
-	t.assert(camelcaseKeys({'foo-bar': true}).fooBar);
+test(t => {
+	t.true(fn({'foo-bar': true}).fooBar);
 	t.end();
 });
