@@ -46,7 +46,7 @@
     "xo": "*"
   },
   "dependencies": {
-    "camelcase": "^1.0.1",
+    "camelcase": "^2.0.0",
     "map-obj": "^1.0.0"
   }
 }
