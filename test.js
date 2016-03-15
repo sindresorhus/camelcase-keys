@@ -6,5 +6,5 @@ test(t => {
 });
 
 test('exclude', t => {
-	t.true(fn({'--': true}, ['--'])['--']);
+	t.true(fn({'--': true}, {exclude: ['--']})['--']);
 });
