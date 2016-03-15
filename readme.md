@@ -29,9 +29,9 @@ camelcaseKeys(argv);
 
 ## API
 
-### camelcaseKeys(obj, [options])
+### camelcaseKeys(input, [options])
 
-#### obj
+#### input
 
 Type: `object`
 
