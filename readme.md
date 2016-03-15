@@ -27,6 +27,24 @@ camelcaseKeys(argv);
 ```
 
 
+## API
+
+### camelcaseKeys(obj, [exclude])
+
+#### obj
+
+Type: `Object`
+
+Object to camelCase.
+
+#### exclude
+
+Type: `Array`  
+Default: `[]`
+
+Exclude keys from camelCasing.
+
+
 ## License
 
 MIT © [Sindre Sorhus](http://sindresorhus.com)
