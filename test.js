@@ -7,4 +7,5 @@ test('main', t => {
 
 test('exclude', t => {
 	t.true(m({'--': true}, {exclude: ['--']})['--']);
+	t.deepEqual(m({'foo-bar': true}, {exclude: [/^f/]}), {'foo-bar': true});
 });

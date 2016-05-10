@@ -33,17 +33,17 @@ camelcaseKeys(argv);
 
 #### input
 
-Type: `object`
+Type: `Object`
 
 Object to camelCase.
 
 #### options
 
-Type: `object`
+Type: `Object`
 
 ##### exclude
 
-Type: `array`<br>
+Type: `Array` of (`string`|`RegExp`)<br>
 Default: `[]`
 
 Exclude keys from being camelCased.
