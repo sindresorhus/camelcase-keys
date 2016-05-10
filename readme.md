@@ -43,7 +43,7 @@ Type: `object`
 
 ##### exclude
 
-Type: `array`  
+Type: `array`<br>
 Default: `[]`
 
 Exclude keys from being camelCased.
@@ -51,4 +51,4 @@ Exclude keys from being camelCased.
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

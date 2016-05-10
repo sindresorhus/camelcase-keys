@@ -7,7 +7,7 @@
   "author": {
     "name": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
-    "url": "http://sindresorhus.com"
+    "url": "sindresorhus.com"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -41,12 +41,12 @@
     "text",
     "convert"
   ],
+  "dependencies": {
+    "camelcase": "^3.0.0",
+    "map-obj": "^1.0.0"
+  },
   "devDependencies": {
     "ava": "*",
     "xo": "*"
-  },
-  "dependencies": {
-    "camelcase": "^2.0.0",
-    "map-obj": "^1.0.0"
   }
 }

@@ -1,10 +1,10 @@
 import test from 'ava';
-import fn from './';
+import m from './';
 
-test(t => {
-	t.true(fn({'foo-bar': true}).fooBar);
+test('main', t => {
+	t.true(m({'foo-bar': true}).fooBar);
 });
 
 test('exclude', t => {
-	t.true(fn({'--': true}, {exclude: ['--']})['--']);
+	t.true(m({'--': true}, {exclude: ['--']})['--']);
 });
