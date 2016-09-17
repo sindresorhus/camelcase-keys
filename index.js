@@ -1,20 +1,16 @@
 'use strict';
-var mapObj = require('map-obj');
-var camelCase = require('camelcase');
+const mapObj = require('map-obj');
+const camelCase = require('camelcase');
 
-var has = function (arr, key) {
-	return arr.some(function (pattern) {
-		return typeof pattern === 'string' ? pattern === key : pattern.test(key);
-	});
-};
+const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.test(key));
 
-module.exports = function (input, options) {
-	options = options || {};
+module.exports = (input, opts) => {
+	opts = Object.assign({
+		exclude: []
+	}, opts);
 
-	var exclude = options.exclude || [];
-
-	return mapObj(input, function (key, val) {
-		key = has(exclude, key) ? key : camelCase(key);
+	return mapObj(input, (key, val) => {
+		key = has(opts.exclude, key) ? key : camelCase(key);
 		return [key, val];
 	});
 };
