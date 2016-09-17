@@ -39,11 +39,14 @@
     "separator",
     "string",
     "text",
-    "convert"
+    "convert",
+    "deep",
+    "recurse",
+    "recursive"
   ],
   "dependencies": {
     "camelcase": "^3.0.0",
-    "map-obj": "^1.0.0"
+    "map-obj": "^2.0.0"
   },
   "devDependencies": {
     "ava": "*",
