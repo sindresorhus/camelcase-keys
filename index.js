@@ -8,7 +8,7 @@ module.exports = (input, opts) => {
 	opts = Object.assign({
 		exclude: [],
 		deep: false,
-		camelCase: camelCase
+		camelCase
 	}, opts);
 
 	return mapObj(input, (key, val) => {
