@@ -7,7 +7,7 @@ const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.te
 module.exports = (input, opts) => {
 	opts = Object.assign({
 		exclude: [],
-		deep: false
+		deep: false,
 		camelCase: camelCase
 	}, opts);
 
