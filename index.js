@@ -8,11 +8,11 @@ module.exports = (input, opts) => {
 	opts = Object.assign({
 		exclude: [],
 		deep: false
+		camelCase: camelCase
 	}, opts);
-	const fn = opts.camelCase || camelCase;
 
 	return mapObj(input, (key, val) => {
-		key = has(opts.exclude, key) ? key : fn(key);
+		key = has(opts.exclude, key) ? key : ops.camelCase(key);
 		return [key, val];
 	}, {deep: opts.deep});
 };
