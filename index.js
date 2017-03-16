@@ -12,7 +12,7 @@ module.exports = (input, opts) => {
 	}, opts);
 
 	return mapObj(input, (key, val) => {
-		key = has(opts.exclude, key) ? key : ops.camelCase(key);
+		key = has(opts.exclude, key) ? key : opts.camelCase(key);
 		return [key, val];
 	}, {deep: opts.deep});
 };
