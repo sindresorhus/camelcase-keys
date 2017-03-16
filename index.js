@@ -7,11 +7,12 @@ const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.te
 module.exports = (input, opts) => {
 	opts = Object.assign({
 		exclude: [],
-		deep: false
+		deep: false,
+		camelCase
 	}, opts);
 
 	return mapObj(input, (key, val) => {
-		key = has(opts.exclude, key) ? key : camelCase(key);
+		key = has(opts.exclude, key) ? key : opts.camelCase(key);
 		return [key, val];
 	}, {deep: opts.deep});
 };
