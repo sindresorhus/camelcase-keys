@@ -61,6 +61,13 @@ Default: `false`
 
 Recurse nested objects and objects in arrays.
 
+##### camelCase
+
+Type: `function`<br>
+Default: `false`
+
+A custom function used to camel-case keys.
+
 
 ## License
 
