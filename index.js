@@ -5,11 +5,11 @@ const camelCase = require('camelcase');
 const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.test(key));
 
 module.exports = (input, opts) => {
-	const fn = opts.camelCase || camelCase;
 	opts = Object.assign({
 		exclude: [],
 		deep: false
 	}, opts);
+	const fn = opts.camelCase || camelCase;
 
 	return mapObj(input, (key, val) => {
 		key = has(opts.exclude, key) ? key : fn(key);
