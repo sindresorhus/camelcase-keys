@@ -13,7 +13,8 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo && ava"
+    "test": "xo && ava",
+    "bench": "matcha bench/bench.js"
   },
   "files": [
     "index.js"
@@ -45,11 +46,13 @@
     "recursive"
   ],
   "dependencies": {
-    "camelcase": "^3.0.0",
-    "map-obj": "^2.0.0"
+    "camelcase": "^4.1.0",
+    "map-obj": "^2.0.0",
+    "quick-lru": "^1.0.0"
   },
   "devDependencies": {
     "ava": "*",
+    "matcha": "^0.7.0",
     "xo": "*"
   },
   "xo": {

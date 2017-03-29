@@ -1,0 +1,45 @@
+{
+		"_id": "58ca523329b7997ab7b741a2",
+		"index": 0,
+		"guid": "e58a19f6-5dc3-45a6-bf57-2db5d32171d6",
+		"is_active": false,
+		"balance": "$3,245.09",
+		"picture": "http://placehold.it/32x32",
+		"age": 21,
+		"eye_color": "blue",
+		"name": "Murphy Rivers",
+		"gender": "male",
+		"company": "OVOLO",
+		"email": "murphyrivers@ovolo.com",
+		"phone": "+1 (840) 432-3958",
+		"address": "950 Wortman Avenue, Axis, New Jersey, 9085",
+		"about": "Qui nulla proident voluptate ut qui laborum est qui aute pariatur consequat reprehenderit. Esse nulla aute sunt esse exercitation ipsum consequat consequat anim ipsum tempor non ex excepteur. Dolor sit id incididunt cillum veniam sint veniam et aliqua velit aute qui magna esse. Qui id minim mollit est magna sunt esse eiusmod. Amet cillum irure est fugiat. Ipsum consectetur Lorem excepteur laboris.",
+		"registered": "2016-04-11T11:47:47 -04:00",
+		"latitude": -79.956954,
+		"longitude": 21.129594,
+		"tags": [
+			"et",
+			"occaecat",
+			"aliqua",
+			"ex",
+			"Lorem",
+			"excepteur",
+			"do"
+		],
+		"friends": [
+			{
+				"id": 0,
+				"name": "Penelope Castro"
+			},
+			{
+				"id": 1,
+				"name": "Henderson Cannon"
+			},
+			{
+				"id": 2,
+				"name": "Alicia Howard"
+			}
+		],
+		"greeting": "Hello, Murphy Rivers! You have 8 unread messages.",
+		"favorite_fruit": "banana"
+}
