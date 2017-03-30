@@ -56,6 +56,11 @@
     "xo": "*"
   },
   "xo": {
-    "esnext": true
+    "overrides": [{
+      "files": "bench/bench.js",
+      "rules": {
+        "import/no-unresolved": "off"
+      }
+    }]
   }
 }
