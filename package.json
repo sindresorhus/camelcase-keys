@@ -1,6 +1,6 @@
 {
   "name": "camelcase-keys",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Convert object keys to camelCase",
   "license": "MIT",
   "repository": "sindresorhus/camelcase-keys",
@@ -56,11 +56,13 @@
     "xo": "*"
   },
   "xo": {
-    "overrides": [{
-      "files": "bench/bench.js",
-      "rules": {
-        "import/no-unresolved": "off"
+    "overrides": [
+      {
+        "files": "bench/bench.js",
+        "rules": {
+          "import/no-unresolved": "off"
+        }
       }
-    }]
+    ]
   }
 }
