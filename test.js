@@ -17,3 +17,11 @@ test('deep option', t => {
 		{fooBar: true, obj: {oneTwo: false, arr: [{threeFour: true}]}}
 	);
 });
+
+test('accepts an array of objects', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		m([{foo_bar: true}, {bar_foo: false}, {'bar-foo': 'false'}]),
+		[{fooBar: true}, {barFoo: false}, {barFoo: 'false'}]
+	);
+});

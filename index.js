@@ -6,7 +6,7 @@ const QuickLru = require('quick-lru');
 const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.test(key));
 const cache = new QuickLru({maxSize: 100000});
 
-module.exports = (input, opts) => {
+const camelCaseConvert = (input, opts) => {
 	opts = Object.assign({
 		deep: false
 	}, opts);
@@ -31,3 +31,11 @@ module.exports = (input, opts) => {
 		return [key, val];
 	}, {deep: opts.deep});
 };
+
+module.exports = (input, opts) => {
+	if (Array.isArray(input)) {
+		return Object.keys(input).map(key => camelCaseConvert(input[key], opts));
+	}
+	return camelCaseConvert(input, opts);
+};
+
