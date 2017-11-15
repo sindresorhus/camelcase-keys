@@ -3,24 +3,29 @@ const mapObj = require('map-obj');
 const camelCase = require('camelcase');
 const QuickLru = require('quick-lru');
 
-const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.test(key));
-const cache = new QuickLru({maxSize: 100000});
+var has = function has(arr, key) {
+	return arr.some(function (x) {
+		return typeof x === 'string' ? x === key : x.test(key);
+	});
+};
+var cache = new QuickLru({ maxSize: 100000 });
 
-module.exports = (input, opts) => {
+module.exports = function (input, opts) {
 	opts = Object.assign({
 		deep: false
 	}, opts);
 
-	const exclude = opts.exclude;
+	var exclude = opts.exclude;
 
-	return mapObj(input, (key, val) => {
+	return mapObj(input, function (key, val) {
 		if (!(exclude && has(exclude, key))) {
 			if (cache.has(key)) {
 				key = cache.get(key);
 			} else {
-				const ret = camelCase(key);
+				var ret = camelCase(key);
 
-				if (key.length < 100) { // Prevent abuse
+				if (key.length < 100) {
+					// Prevent abuse
 					cache.set(key, ret);
 				}
 
@@ -29,5 +34,5 @@ module.exports = (input, opts) => {
 		}
 
 		return [key, val];
-	}, {deep: opts.deep});
+	}, { deep: opts.deep });
 };
