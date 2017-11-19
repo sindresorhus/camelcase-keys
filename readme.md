@@ -15,11 +15,11 @@ $ npm install --save camelcase-keys
 ```js
 const camelcaseKeys = require('camelcase-keys');
 
-// Convert Object
+// Convert an object
 camelcaseKeys({'foo-bar': true});
 //=> {fooBar: true}
 
-// Convert Array of Object
+// Convert an array of objects
 camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 //=> [{fooBar: true}, {barFoo: false}]
 
@@ -44,9 +44,9 @@ camelcaseKeys(argv);
 
 #### input
 
-Type: `Object` or `Array of Object`
+Type: `Object` `[]Object`
 
-Object or Array of Object to camelCase.
+Object or array of objects to camelCase.
 
 #### options
 
