@@ -7,6 +7,10 @@ const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.te
 const cache = new QuickLru({maxSize: 100000});
 
 const camelCaseConvert = (input, opts) => {
+	if (Array.isArray(input)) {
+		return Object.keys(input).map(key => camelCaseConvert(input[key], opts));
+	}
+
 	opts = Object.assign({
 		deep: false
 	}, opts);
@@ -32,10 +36,5 @@ const camelCaseConvert = (input, opts) => {
 	}, {deep: opts.deep});
 };
 
-module.exports = (input, opts) => {
-	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => camelCaseConvert(input[key], opts));
-	}
-	return camelCaseConvert(input, opts);
-};
+module.exports = camelCaseConvert;
 

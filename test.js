@@ -25,3 +25,11 @@ test('accepts an array of objects', t => {
 		[{fooBar: true}, {barFoo: false}, {barFoo: 'false'}]
 	);
 });
+
+test('deep array of objects', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		m({Prop: [{foo_bar: [{one_two: false}]}, {bar_foo: false}, {'bar-foo': 'false'}]}, {deep: true}),
+		{prop: [{fooBar: [{oneTwo: false}]}, {barFoo: false}, {barFoo: 'false'}]}
+	);
+});
