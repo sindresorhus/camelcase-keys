@@ -66,6 +66,9 @@ Default: `false`
 
 Recurse nested objects and objects in arrays.
 
+## Related
+
+- [bendrucker/snakecase-keys](https://github.com/bendrucker/snakecase-keys)
 
 ## License
 
