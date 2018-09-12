@@ -18,6 +18,14 @@ test('deep option', t => {
 	);
 });
 
+test('handles nested arrays', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		m({q_w_e: [['a', 'b']]}, {deep: true}),
+		{qWE: [['a', 'b']]}
+	);
+});
+
 test('accepts an array of objects', t => {
 	t.deepEqual(
 		// eslint-disable-next-line camelcase

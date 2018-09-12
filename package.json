@@ -47,7 +47,7 @@
   ],
   "dependencies": {
     "camelcase": "^4.1.0",
-    "map-obj": "^2.0.0",
+    "map-obj": "^3.0.0",
     "quick-lru": "^1.0.0"
   },
   "devDependencies": {
