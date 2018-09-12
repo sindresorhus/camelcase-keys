@@ -11,7 +11,7 @@ const camelCaseConvert = (input, opts) => {
 		deep: false
 	}, opts);
 
-	const exclude = opts.exclude;
+	const {exclude} = opts;
 
 	return mapObj(input, (key, val) => {
 		if (!(exclude && has(exclude, key))) {
