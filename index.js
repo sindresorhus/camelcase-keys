@@ -3,17 +3,17 @@ const mapObj = require('map-obj');
 const camelCase = require('camelcase');
 const QuickLru = require('quick-lru');
 
-const has = (arr, key) => arr.some(x => typeof x === 'string' ? x === key : x.test(key));
+const has = (array, key) => array.some(x => typeof x === 'string' ? x === key : x.test(key));
 const cache = new QuickLru({maxSize: 100000});
 
-const camelCaseConvert = (input, opts) => {
-	opts = Object.assign({
+const camelCaseConvert = (input, options) => {
+	options = Object.assign({
 		deep: false
-	}, opts);
+	}, options);
 
-	const {exclude} = opts;
+	const {exclude} = options;
 
-	return mapObj(input, (key, val) => {
+	return mapObj(input, (key, value) => {
 		if (!(exclude && has(exclude, key))) {
 			if (cache.has(key)) {
 				key = cache.get(key);
@@ -28,14 +28,15 @@ const camelCaseConvert = (input, opts) => {
 			}
 		}
 
-		return [key, val];
-	}, {deep: opts.deep});
+		return [key, value];
+	}, {deep: options.deep});
 };
 
-module.exports = (input, opts) => {
+module.exports = (input, options) => {
 	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => camelCaseConvert(input[key], opts));
+		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
 	}
-	return camelCaseConvert(input, opts);
+
+	return camelCaseConvert(input, options);
 };
 

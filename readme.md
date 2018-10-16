@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install --save camelcase-keys
+$ npm install camelcase-keys
 ```
 
 
@@ -54,7 +54,7 @@ Type: `Object`
 
 ##### exclude
 
-Type: `string[]` `RegExp[]`<br>
+Type: `Array<string|RegExp>`<br>
 Default: `[]`
 
 Exclude keys from being camelCased.
