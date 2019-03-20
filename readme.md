@@ -70,6 +70,7 @@ Recurse nested objects and objects in arrays.
 ## Related
 
 - [snakecase-keys](https://github.com/bendrucker/snakecase-keys)
+- [kebabcase-keys](https://github.com/mattiloh/kebabcase-keys)
 
 
 ## License
