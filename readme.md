@@ -54,7 +54,7 @@ Type: `Object`
 
 ##### exclude
 
-Type: `Array<string|RegExp>`<br>
+Type: `(string | RegExp)[]`<br>
 Default: `[]`
 
 Exclude keys from being camelCased.

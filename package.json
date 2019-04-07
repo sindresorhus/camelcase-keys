@@ -13,11 +13,12 @@
 		"node": ">=6"
 	},
 	"scripts": {
-		"test": "xo && ava",
+		"test": "xo && ava && tsd",
 		"bench": "matcha bench/bench.js"
 	},
 	"files": [
-		"index.js"
+		"index.js",
+		"index.d.ts"
 	],
 	"keywords": [
 		"map",
@@ -46,14 +47,15 @@
 		"recursive"
 	],
 	"dependencies": {
-		"camelcase": "^5.0.0",
+		"camelcase": "^5.3.1",
 		"map-obj": "^3.0.0",
-		"quick-lru": "^1.0.0"
+		"quick-lru": "^2.0.0"
 	},
 	"devDependencies": {
-		"ava": "^0.25.0",
+		"ava": "^1.4.1",
 		"matcha": "^0.7.0",
-		"xo": "^0.23.0"
+		"tsd": "^0.7.2",
+		"xo": "^0.24.0"
 	},
 	"xo": {
 		"overrides": [
