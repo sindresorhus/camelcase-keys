@@ -12,7 +12,7 @@ declare namespace camelcaseKeys {
 
 		@default []
 		*/
-		readonly exclude?: (string | RegExp)[];
+		readonly exclude?: Array<string | RegExp>;
 	}
 }
 
