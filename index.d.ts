@@ -17,9 +17,9 @@ declare namespace camelcaseKeys {
 }
 
 /**
-Convert object keys to camelCase using [`camelcase`](https://github.com/sindresorhus/camelcase).
+Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase).
 
-@param input - Object or array of objects to camelCase.
+@param input - Object or array of objects to camel-case.
 
 @example
 ```
@@ -35,6 +35,7 @@ camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
+
 
 import minimist = require('minimist');
 

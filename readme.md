@@ -1,6 +1,6 @@
 # camelcase-keys [![Build Status](https://travis-ci.org/sindresorhus/camelcase-keys.svg?branch=master)](https://travis-ci.org/sindresorhus/camelcase-keys)
 
-> Convert object keys to camelCase using [`camelcase`](https://github.com/sindresorhus/camelcase)
+> Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase)
 
 
 ## Install
@@ -44,9 +44,9 @@ camelcaseKeys(argv);
 
 #### input
 
-Type: `Object` `Object[]`
+Type: `object | object[]`
 
-Object or array of objects to camelCase.
+An object or array of objects to camel-case.
 
 #### options
 
@@ -57,7 +57,7 @@ Type: `Object`
 Type: `Array<string | RegExp>`<br>
 Default: `[]`
 
-Exclude keys from being camelCased.
+Exclude keys from being camel-cased.
 
 ##### deep
 
