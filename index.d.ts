@@ -12,7 +12,7 @@ declare namespace camelcaseKeys {
 
 		@default []
 		*/
-		readonly exclude?: Array<string | RegExp>;
+		readonly exclude?: ReadonlyArray<string | RegExp>;
 	}
 }
 
@@ -46,7 +46,11 @@ camelcaseKeys(argv);
 ```
 */
 declare function camelcaseKeys(
-	input: unknown,
+	input: ReadonlyArray<{[key: string]: unknown}>,
+	options?: camelcaseKeys.Options
+): Array<{[key: string]: unknown}>;
+declare function camelcaseKeys(
+	input: {[key: string]: unknown},
 	options?: camelcaseKeys.Options
 ): {[key: string]: unknown};
 
