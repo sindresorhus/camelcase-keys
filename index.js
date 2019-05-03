@@ -20,11 +20,11 @@ const camelCaseConvert = (input, options) => {
 
 	const {exclude, excludePaths, stopPaths, deep} = options;
 
-	const excludePathsSet = excludePaths === undefined ? new Set() : new Set(excludePaths.map(path => `.${path}`));
-	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths.map(path => `.${path}`));
+	const excludePathsSet = excludePaths === undefined ? new Set() : new Set(excludePaths);
+	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths);
 
 	const makeMapper = parentPath => (key, value) => {
-		const path = `${parentPath}.${key}`;
+		const path = parentPath === undefined ? key : `${parentPath}.${key}`;
 
 		if (deep && isObject(value) && !stopPathsSet.has(path)) {
 			value = mapObj(value, makeMapper(path));
@@ -47,7 +47,7 @@ const camelCaseConvert = (input, options) => {
 		return [key, value];
 	};
 
-	return mapObj(input, makeMapper(''));
+	return mapObj(input, makeMapper(undefined));
 };
 
 module.exports = (input, options) => {
