@@ -13,6 +13,20 @@ declare namespace camelcaseKeys {
 		@default []
 		*/
 		readonly exclude?: ReadonlyArray<string | RegExp>;
+
+		/**
+		Stop childs of paths from being camelCased.
+
+		@default []
+		*/
+		readonly stopPaths?: Array<string>;
+
+		/**
+		Exclude paths from being camelCased.
+
+		@default []
+		*/
+		readonly excludePaths?: Array<string>;
 	}
 }
 

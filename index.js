@@ -6,15 +6,31 @@ const QuickLru = require('quick-lru');
 const has = (array, key) => array.some(x => typeof x === 'string' ? x === key : x.test(key));
 const cache = new QuickLru({maxSize: 100000});
 
+const isObject = value =>
+	typeof value === 'object' &&
+	value !== null &&
+	!(value instanceof RegExp) &&
+	!(value instanceof Error) &&
+	!(value instanceof Date);
+
 const camelCaseConvert = (input, options) => {
 	options = Object.assign({
 		deep: false
 	}, options);
 
-	const {exclude} = options;
+	const {exclude, excludePaths, stopPaths, deep} = options;
 
-	return mapObj(input, (key, value) => {
-		if (!(exclude && has(exclude, key))) {
+	const excludePathsSet = excludePaths === undefined ? new Set() : new Set(excludePaths.map(path => `.${path}`));
+	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths.map(path => `.${path}`));
+
+	const makeMapper = parentPath => (key, value) => {
+		const path = `${parentPath}.${key}`;
+
+		if (deep && isObject(value) && !stopPathsSet.has(path)) {
+			value = mapObj(value, makeMapper(path));
+		}
+
+		if (!excludePathsSet.has(path) && !(exclude && has(exclude, key))) {
 			if (cache.has(key)) {
 				key = cache.get(key);
 			} else {
@@ -29,7 +45,9 @@ const camelCaseConvert = (input, options) => {
 		}
 
 		return [key, value];
-	}, {deep: options.deep});
+	};
+
+	return mapObj(input, makeMapper(''));
 };
 
 module.exports = (input, options) => {

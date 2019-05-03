@@ -9,3 +9,9 @@ expectType<{[key: string]: unknown}>(
 expectType<{[key: string]: unknown}>(
 	camelcaseKeys({'foo-bar': true}, {exclude: ['foo', /bar/]})
 );
+expectType<{[key: string]: unknown}>(
+	camelcaseKeys({'foo-bar': true}, {excludePaths: ['foo']})
+);
+expectType<{[key: string]: unknown}>(
+	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']})
+);

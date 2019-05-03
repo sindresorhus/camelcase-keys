@@ -59,6 +59,20 @@ Default: `[]`
 
 Exclude keys from being camel-cased.
 
+##### excludePaths
+
+Type: `Array<string>`<br>
+Default: `[]`
+
+Exclude paths from being camelCased.
+
+##### stopPaths
+
+Type: `Array<string>`<br>
+Default: `[]`
+
+Stop childs of paths from being camelCased.
+
 ##### deep
 
 Type: `boolean`<br>
