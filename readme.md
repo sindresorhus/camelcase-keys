@@ -40,7 +40,7 @@ camelcaseKeys(argv);
 
 ## API
 
-### camelcaseKeys(input, [options])
+### camelcaseKeys(input, options?)
 
 #### input
 
@@ -50,7 +50,7 @@ An object or array of objects to camel-case.
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### exclude
 
@@ -73,6 +73,14 @@ Recurse nested objects and objects in arrays.
 - [kebabcase-keys](https://github.com/mattiloh/kebabcase-keys)
 
 
-## License
+---
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+<div align="center">
+	<b>
+		<a href="https://tidelift.com/subscription/pkg/npm-camelcase-keys?utm_source=npm-camelcase-keys&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
+	</b>
+	<br>
+	<sub>
+		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+	</sub>
+</div>
