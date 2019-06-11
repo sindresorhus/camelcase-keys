@@ -7,9 +7,10 @@ const has = (array, key) => array.some(x => typeof x === 'string' ? x === key : 
 const cache = new QuickLru({maxSize: 100000});
 
 const camelCaseConvert = (input, options) => {
-	options = Object.assign({
-		deep: false
-	}, options);
+	options = {
+		deep: false,
+		...options
+	};
 
 	const {exclude} = options;
 
