@@ -2,6 +2,7 @@
 
 > Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase)
 
+Note that this package is designed for node, and as such is _not_ transpiled. If you intend to use this in a browser, please have a look at [babel-engine-plugin](https://github.com/SamVerschueren/babel-engine-plugin) which will automatically transpile all of your dependencies which target node versions later than 0.10
 
 ## Install
 
