@@ -13,6 +13,13 @@ declare namespace camelcaseKeys {
 		@default []
 		*/
 		readonly exclude?: ReadonlyArray<string | RegExp>;
+
+		/**
+		Uppercase the first character as in 'bye-bye → ByeBye'
+
+		@default false
+		*/
+		readonly pascalCase?: boolean;
 	}
 }
 
@@ -36,6 +43,9 @@ camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
 
+// Convert an object to PascalCase notation
+camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+//=> {FooBar: true, Nested: {UnicornRainbow: true}}
 
 import minimist = require('minimist');
 

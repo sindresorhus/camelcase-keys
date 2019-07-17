@@ -25,6 +25,10 @@ camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
+
+// Convert an object to the PascalCase notation
+camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+//=> {FooBar: true, Nested: {UnicornRainbow: true}}
 ```
 
 ```js
@@ -65,6 +69,13 @@ Type: `boolean`<br>
 Default: `false`
 
 Recurse nested objects and objects in arrays.
+
+##### pascalCase
+
+Type: `boolean`<br>
+Default: `false`
+
+Uppercase the first character as in 'bye-bye → ByeBye'.
 
 
 ## Related

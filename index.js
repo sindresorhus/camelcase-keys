@@ -9,17 +9,18 @@ const cache = new QuickLru({maxSize: 100000});
 const camelCaseConvert = (input, options) => {
 	options = {
 		deep: false,
+		pascalCase: false,
 		...options
 	};
 
-	const {exclude} = options;
+	const {exclude, pascalCase} = options;
 
 	return mapObj(input, (key, value) => {
 		if (!(exclude && has(exclude, key))) {
 			if (cache.has(key)) {
 				key = cache.get(key);
 			} else {
-				const ret = camelCase(key);
+				const ret = camelCase(key, {pascalCase});
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(key, ret);

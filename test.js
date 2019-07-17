@@ -18,6 +18,18 @@ test('deep option', t => {
 	);
 });
 
+test('pascalCase option only', t => {
+	t.true(camelcaseKeys({'new-foo-bar': true}, {pascalCase: true}).NewFooBar);
+});
+
+test('pascalCase and deep options', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({p_foo_bar: true, p_obj: {p_two: false, p_arr: [{p_three_four: true}]}}, {deep: true, pascalCase: true}),
+		{PFooBar: true, PObj: {PTwo: false, PArr: [{PThreeFour: true}]}}
+	);
+});
+
 test('handles nested arrays', t => {
 	t.deepEqual(
 		// eslint-disable-next-line camelcase
