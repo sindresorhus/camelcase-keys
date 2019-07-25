@@ -38,6 +38,13 @@ test('stopPaths option', t => {
 		camelcaseKeys({q_w_e: [[{foo_bar: 1}, {one_two: 2}, {foo_bar: 3, one_two: 4}]]}, {deep: true, stopPaths: ['q_w_e.foo_bar']}),
 		{qWE: [[{fooBar: 1}, {oneTwo: 2}, {fooBar: 3, oneTwo: 4}]]}
 	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
+		// eslint-disable-next-line camelcase
+		{aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
+	);
 });
 
 test('handles nested arrays', t => {
