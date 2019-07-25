@@ -18,22 +18,6 @@ test('deep option', t => {
 	);
 });
 
-test('excludePaths option', t => {
-	t.deepEqual(
-		// eslint-disable-next-line camelcase
-		camelcaseKeys({foo_bar: true, obj: {one_two: false, arr: [{three_four: true}]}}, {deep: true, excludePaths: ['foo_bar', 'obj.arr.three_four']}),
-		// eslint-disable-next-line camelcase
-		{foo_bar: true, obj: {oneTwo: false, arr: [{three_four: true}]}}
-	);
-
-	t.deepEqual(
-		// eslint-disable-next-line camelcase
-		camelcaseKeys({q_w_e: [[{foo_bar: 1}, {one_two: 2}, {foo_bar: 3, one_two: 4}]]}, {deep: true, excludePaths: ['q_w_e.foo_bar']}),
-		// eslint-disable-next-line camelcase
-		{qWE: [[{foo_bar: 1}, {oneTwo: 2}, {foo_bar: 3, oneTwo: 4}]]}
-	);
-});
-
 test('stopPaths option', t => {
 	t.deepEqual(
 		// eslint-disable-next-line camelcase

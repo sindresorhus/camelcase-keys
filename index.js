@@ -18,9 +18,8 @@ const camelCaseConvert = (input, options) => {
 		deep: false
 	}, options);
 
-	const {exclude, excludePaths, stopPaths, deep} = options;
+	const {exclude, stopPaths, deep} = options;
 
-	const excludePathsSet = excludePaths === undefined ? new Set() : new Set(excludePaths);
 	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths);
 
 	const makeMapper = parentPath => (key, value) => {
@@ -30,7 +29,7 @@ const camelCaseConvert = (input, options) => {
 			value = mapObj(value, makeMapper(path));
 		}
 
-		if (!excludePathsSet.has(path) && !(exclude && has(exclude, key))) {
+		if (!(exclude && has(exclude, key))) {
 			if (cache.has(key)) {
 				key = cache.get(key);
 			} else {
