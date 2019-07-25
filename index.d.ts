@@ -19,7 +19,7 @@ declare namespace camelcaseKeys {
 
 		@default []
 		*/
-		readonly stopPaths?: Array<string>;
+		readonly stopPaths?: string[];
 	}
 }
 
