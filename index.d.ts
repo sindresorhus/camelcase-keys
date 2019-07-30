@@ -15,7 +15,7 @@ declare namespace camelcaseKeys {
 		readonly exclude?: ReadonlyArray<string | RegExp>;
 
 		/**
-		Stop childs of paths from being camelCased.
+		Exclude childs of specified object paths(strings in dot notation, for example `prop1.prop2.prop`) from being camelCased.
 
 		@default []
 
