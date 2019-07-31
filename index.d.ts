@@ -47,11 +47,11 @@ camelcaseKeys(argv);
 ```
 */
 declare function camelcaseKeys(
-	input: ReadonlyArray<{[key: string]: unknown}>,
+	input: ReadonlyArray<{[key: string]: any}>,
 	options?: camelcaseKeys.Options
 ): Array<{[key: string]: unknown}>;
 declare function camelcaseKeys(
-	input: {[key: string]: unknown},
+	input: {[key: string]: any},
 	options?: camelcaseKeys.Options
 ): {[key: string]: unknown};
 
