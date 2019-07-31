@@ -1,8 +1,8 @@
 /* globals bench suite set */
 'use strict';
 const camelcaseKeysNpm = require('camelcase-keys');
-const camelcaseKeys = require('..');
 const fixture = require('./fixture');
+const camelcaseKeys = require('..');
 
 suite('camelcaseKeys', () => {
 	set('mintime', 1000);
