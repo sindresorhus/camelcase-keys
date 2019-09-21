@@ -69,6 +69,11 @@ Default: `[]`
 
 Exclude childs of specified object paths(strings in dot notation, for example `prop1.prop2.prop`) from being camelCased.
 
+```js
+camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
+//=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
+```
+
 ##### deep
 
 Type: `boolean`<br>
