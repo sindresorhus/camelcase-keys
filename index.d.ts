@@ -43,7 +43,7 @@ camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
 
-// Convert an object to PascalCase notation
+// Convert object keys to pascal case
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
 //=> {FooBar: true, Nested: {UnicornRainbow: true}}
 
