@@ -15,7 +15,7 @@ declare namespace camelcaseKeys {
 		readonly exclude?: ReadonlyArray<string | RegExp>;
 
 		/**
-		Uppercase the first character as in 'bye-bye → ByeBye'
+		Uppercase the first character as in `bye-bye` → `ByeBye`.
 
 		@default false
 		*/
