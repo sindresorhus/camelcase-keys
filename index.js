@@ -6,6 +6,7 @@ const QuickLru = require('quick-lru');
 const has = (array, key) => array.some(x => typeof x === 'string' ? x === key : x.test(key));
 const cache = new QuickLru({maxSize: 100000});
 
+// Reproduces behavior from `map-obj`
 const isObject = value =>
 	typeof value === 'object' &&
 	value !== null &&
