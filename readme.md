@@ -64,7 +64,7 @@ Exclude keys from being camel-cased.
 
 ##### stopPaths
 
-Type: `Array<string>`<br>
+Type: `string[]`<br>
 Default: `[]`
 
 Exclude children at the given object paths in dot notation from being camelCased.
