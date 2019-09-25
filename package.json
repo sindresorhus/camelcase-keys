@@ -1,6 +1,6 @@
 {
 	"name": "camelcase-keys",
-	"version": "5.2.0",
+	"version": "6.0.1",
 	"description": "Convert object keys to camel case",
 	"license": "MIT",
 	"repository": "sindresorhus/camelcase-keys",
@@ -10,7 +10,7 @@
 		"url": "sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=6"
+		"node": ">=8"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd",
@@ -48,13 +48,13 @@
 	],
 	"dependencies": {
 		"camelcase": "^5.3.1",
-		"map-obj": "^3.0.0",
-		"quick-lru": "^1.0.0"
+		"map-obj": "^4.0.0",
+		"quick-lru": "^4.0.1"
 	},
 	"devDependencies": {
-		"ava": "^1.4.1",
+		"ava": "^2.1.0",
 		"matcha": "^0.7.0",
-		"tsd": "^0.7.2",
+		"tsd": "^0.7.3",
 		"xo": "^0.24.0"
 	},
 	"xo": {

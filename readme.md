@@ -28,6 +28,10 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 
 camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
 //=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
+
+// Convert object keys to pascal case
+camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+//=> {FooBar: true, Nested: {UnicornRainbow: true}}
 ```
 
 ```js
@@ -43,7 +47,7 @@ camelcaseKeys(argv);
 
 ## API
 
-### camelcaseKeys(input, [options])
+### camelcaseKeys(input, options?)
 
 #### input
 
@@ -53,7 +57,7 @@ An object or array of objects to camel-case.
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### exclude
 
@@ -101,6 +105,13 @@ Default: `false`
 
 Recurse nested objects and objects in arrays.
 
+##### pascalCase
+
+Type: `boolean`<br>
+Default: `false`
+
+Uppercase the first character as in `bye-bye` → `ByeBye`.
+
 
 ## Related
 
@@ -108,6 +119,14 @@ Recurse nested objects and objects in arrays.
 - [kebabcase-keys](https://github.com/mattiloh/kebabcase-keys)
 
 
-## License
+---
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+<div align="center">
+	<b>
+		<a href="https://tidelift.com/subscription/pkg/npm-camelcase-keys?utm_source=npm-camelcase-keys&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
+	</b>
+	<br>
+	<sub>
+		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+	</sub>
+</div>

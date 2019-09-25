@@ -14,11 +14,13 @@ const isObject = value =>
 	!(value instanceof Date);
 
 const camelCaseConvert = (input, options) => {
-	options = Object.assign({
-		deep: false
-	}, options);
+	options = {
+		deep: false,
+		pascalCase: false,
+		...options
+	};
 
-	const {exclude, stopPaths, deep} = options;
+	const {exclude, pascalCase, stopPaths, deep} = options;
 
 	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths);
 
@@ -33,7 +35,7 @@ const camelCaseConvert = (input, options) => {
 			if (cache.has(key)) {
 				key = cache.get(key);
 			} else {
-				const ret = camelCase(key);
+				const ret = camelCase(key, {pascalCase});
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(key, ret);
