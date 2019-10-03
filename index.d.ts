@@ -59,10 +59,10 @@ camelcaseKeys(argv);
 declare function camelcaseKeys(
 	input: ReadonlyArray<{[key: string]: any}>,
 	options?: camelcaseKeys.Options
-): Array<{[key: string]: unknown}>;
+): Array<{[key: string]: any}>;
 declare function camelcaseKeys(
 	input: {[key: string]: any},
 	options?: camelcaseKeys.Options
-): {[key: string]: unknown};
+): {[key: string]: any};
 
 export = camelcaseKeys;
