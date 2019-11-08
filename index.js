@@ -3,7 +3,15 @@ const mapObj = require('map-obj');
 const camelCase = require('camelcase');
 const QuickLru = require('quick-lru');
 
-const has = (array, key) => array.some(x => typeof x === 'string' ? x === key : x.test(key));
+const has = (array, key) => array.some(x => {
+	if (typeof x === 'string') {
+		return x === key;
+	}
+
+	x.lastIndex = 0;
+	return x.test(key);
+});
+
 const cache = new QuickLru({maxSize: 100000});
 
 // Reproduces behavior from `map-obj`
