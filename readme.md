@@ -61,14 +61,14 @@ Type: `object`
 
 ##### exclude
 
-Type: `Array<string | RegExp>`<br>
+Type: `Array<string | RegExp>`\
 Default: `[]`
 
 Exclude keys from being camel-cased.
 
 ##### stopPaths
 
-Type: `string[]`<br>
+Type: `string[]`\
 Default: `[]`
 
 Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
@@ -103,14 +103,14 @@ camelcaseKeys({
 
 ##### deep
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Recurse nested objects and objects in arrays.
 
 ##### pascalCase
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Uppercase the first character as in `bye-bye` → `ByeBye`.
