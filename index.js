@@ -34,10 +34,12 @@ const camelCaseConvert = (input, options) => {
 	const stopPathsSet = new Set(stopPaths);
 
 	const makeMapper = parentPath => (key, value) => {
-		const path = parentPath === undefined ? key : `${parentPath}.${key}`;
+		if (deep && isObject(value)) {
+			const path = parentPath === undefined ? key : `${parentPath}.${key}`;
 
-		if (deep && isObject(value) && !stopPathsSet.has(path)) {
-			value = mapObj(value, makeMapper(path));
+			if (!stopPathsSet.has(path)) {
+				value = mapObj(value, makeMapper(path));
+			}
 		}
 
 		if (!(exclude && has(exclude, key))) {
