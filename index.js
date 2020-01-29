@@ -36,7 +36,7 @@ const camelCaseConvert = (input, options) => {
 	const makeMapper = parentPath => (key, value) => {
 		if (deep && isObject(value)) {
 			const path = parentPath === undefined ? key : `${parentPath}.${key}`;
-			
+
 			if (!stopPathsSet.has(path)) {
 				value = mapObj(value, makeMapper(path));
 			}
