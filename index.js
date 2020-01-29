@@ -31,7 +31,7 @@ const camelCaseConvert = (input, options) => {
 
 	const {exclude, pascalCase, stopPaths, deep} = options;
 
-	const stopPathsSet = stopPaths === undefined ? new Set() : new Set(stopPaths);
+	const stopPathsSet = new Set(stopPaths);
 
 	const makeMapper = parentPath => (key, value) => {
 		const path = parentPath === undefined ? key : `${parentPath}.${key}`;
