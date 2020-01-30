@@ -43,6 +43,8 @@
 		"string",
 		"text",
 		"convert",
+		"pascalcase",
+		"pascal-case",
 		"deep",
 		"recurse",
 		"recursive"
