@@ -43,13 +43,15 @@ const camelCaseConvert = (input, options) => {
 		}
 
 		if (!(exclude && has(exclude, key))) {
-			if (cache.has(key)) {
-				key = cache.get(key);
+			const cacheKey = pascalCase ? `${key}_` : key;
+
+			if (cache.has(cacheKey)) {
+				key = cache.get(cacheKey);
 			} else {
 				const ret = camelCase(key, {pascalCase});
 
 				if (key.length < 100) { // Prevent abuse
-					cache.set(key, ret);
+					cache.set(cacheKey, ret);
 				}
 
 				key = ret;
@@ -69,4 +71,3 @@ module.exports = (input, options) => {
 
 	return camelCaseConvert(input, options);
 };
-
