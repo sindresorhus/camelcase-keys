@@ -1,13 +1,13 @@
 import {expectType} from 'tsd';
 import camelcaseKeys = require('.');
 
-const fooBarObj = {'foo-bar': true}
-const camelFooBarObj = camelcaseKeys(fooBarObj)
-expectType<typeof fooBarObj>(camelFooBarObj)
+const fooBarObject = {'foo-bar': true};
+const camelFooBarObject = camelcaseKeys(fooBarObject);
+expectType<typeof fooBarObject>(camelFooBarObject);
 
-const fooBarArr = [{'foo-bar': true}]
-const camelFooBarArr = camelcaseKeys(fooBarArr)
-expectType<typeof fooBarArr>(camelFooBarArr)
+const fooBarArray = [{'foo-bar': true}];
+const camelFooBarArray = camelcaseKeys(fooBarArray);
+expectType<typeof fooBarArray>(camelFooBarArray);
 
 expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}]));
 
