@@ -34,7 +34,7 @@ interface SomeObject {
 }
 
 const someObj: SomeObject = {
-	someProperty: "hello",
+	someProperty: 'hello'
 };
 
 expectType<SomeObject>(camelcaseKeys(someObj));
@@ -45,7 +45,7 @@ type SomeTypeAlias = {
 }
 
 const objectWithTypeAlias = {
-	someProperty: "this should also work"
+	someProperty: 'this should also work'
 };
 
 expectType<SomeTypeAlias>(camelcaseKeys(objectWithTypeAlias));
