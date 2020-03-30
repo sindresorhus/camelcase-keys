@@ -23,6 +23,9 @@ const isObject = value =>
 	!(value instanceof Date);
 
 const camelCaseConvert = (input, options) => {
+	if (typeof input !== 'object') {
+		return input;
+	}
 	options = {
 		deep: false,
 		pascalCase: false,
