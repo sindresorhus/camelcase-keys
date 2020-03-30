@@ -26,6 +26,7 @@ const camelCaseConvert = (input, options) => {
 	if (typeof input !== 'object') {
 		return input;
 	}
+
 	options = {
 		deep: false,
 		pascalCase: false,

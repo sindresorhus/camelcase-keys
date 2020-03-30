@@ -90,3 +90,17 @@ test('different pascalCase option values', t => {
 		{pFooBar: true, pObj: {pTwo: false, pArr: [{pThreeFour: true}]}}
 	);
 });
+
+test('return orginal array if they are not objects', t => {
+	t.deepEqual(
+		camelcaseKeys(['name 1', 'name 2']),
+		['name 1', 'name 2']
+	);
+});
+
+test('return orginal array if they are not objects and deep options', t => {
+	t.deepEqual(
+		camelcaseKeys(['name 1', 'name 2'], {deep: true}),
+		['name 1', 'name 2']
+	);
+});
