@@ -13,7 +13,7 @@ expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}])
 
 expectType<Array<string>>(camelcaseKeys(['name 1', 'name 2']));
 
-expectType<Array<string>>(camelcaseKeys(['name 1', 'name 2'], { deep: true }));
+expectType<Array<string>>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 
 expectType<{[key in 'foo-bar']: true}>(camelcaseKeys({'foo-bar': true}));
 

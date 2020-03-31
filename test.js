@@ -92,15 +92,17 @@ test('different pascalCase option values', t => {
 });
 
 test('return orginal array if they are not objects', t => {
+	const input = ['name 1', 'name 2'];
 	t.deepEqual(
-		camelcaseKeys(['name 1', 'name 2']),
-		['name 1', 'name 2']
+		camelcaseKeys(input),
+		input
 	);
 });
 
 test('return orginal array if they are not objects and deep options', t => {
+	const input = ['name 1', 'name 2'];
 	t.deepEqual(
-		camelcaseKeys(['name 1', 'name 2'], {deep: true}),
-		['name 1', 'name 2']
+		camelcaseKeys(input, {deep: true}),
+		input
 	);
 });
