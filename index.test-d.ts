@@ -11,6 +11,10 @@ expectType<typeof fooBarArray>(camelFooBarArray);
 
 expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}]));
 
+expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
+
+expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
+
 expectType<{[key in 'foo-bar']: true}>(camelcaseKeys({'foo-bar': true}));
 
 expectType<{[key in 'foo-bar']: true}>(

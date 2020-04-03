@@ -90,3 +90,19 @@ test('different pascalCase option values', t => {
 		{pFooBar: true, pObj: {pTwo: false, pArr: [{pThreeFour: true}]}}
 	);
 });
+
+test('handle array of non-objects', t => {
+	const input = ['name 1', 'name 2'];
+	t.deepEqual(
+		camelcaseKeys(input),
+		input
+	);
+});
+
+test('handle array of non-objects with `deep` option', t => {
+	const input = ['name 1', 'name 2'];
+	t.deepEqual(
+		camelcaseKeys(input, {deep: true}),
+		input
+	);
+});
