@@ -20,9 +20,9 @@ const analyticsEventFromServer = {path: "/about", num_visits: 200};
 const camelCasedAnalyticsEvent = camelcaseKeys<AnalyticsEvent>(analyticsEventFromServer);
 expectType<AnalyticsEvent>(camelCasedAnalyticsEvent);
 
-const fooBarArray = [{'foo-bar': true}];
-const camelFooBarArray = camelcaseKeys(fooBarArray);
-expectType<typeof fooBarArray>(camelFooBarArray);
+const analyticsEventsArray = [{path: "/about", num_visits: 24}, {path:"/pricing", numVisits: 100}];
+const camelCasedEventsArray = camelcaseKeys<AnalyticsEvent[]>(analyticsEventsArray);
+expectType<AnalyticsEvent[]>(camelCasedEventsArray);
 
 expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}]));
 

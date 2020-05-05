@@ -90,13 +90,16 @@ camelcaseKeys(argv);
 //=> {_: [], fooBar: true}
 ```
 */
-declare function camelcaseKeys<T extends ReadonlyArray<{[key: string]: any}>>(
-	input: T,
+
+type AnyKeyValuePair = {[key: string]: any}
+
+declare function camelcaseKeys<T extends ReadonlyArray<AnyKeyValuePair>>(
+	input: ReadonlyArray<AnyKeyValuePair>,
 	options?: camelcaseKeys.Options,
 ): T;
 
-declare function camelcaseKeys<T extends Record<string, any>>(
-	input: {[key: string]: any},
+declare function camelcaseKeys<T extends AnyKeyValuePair>(
+	input: AnyKeyValuePair,
 	options?: camelcaseKeys.Options,
 ): T;
 
