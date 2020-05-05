@@ -1,9 +1,24 @@
 import {expectType} from 'tsd';
 import camelcaseKeys = require('.');
 
-const fooBarObject = {'foo-bar': true};
-const camelFooBarObject = camelcaseKeys(fooBarObject);
-expectType<typeof fooBarObject>(camelFooBarObject);
+
+// Imagine our API responds with
+// data that is snake_cased.
+interface AnalyticsEventResponse {
+	path: string;
+	num_visits: number;
+}
+
+// On the client side, we might
+// extend the interface whereby
+// the keys are all camelized.
+interface AnalyticsEvent extends Pick<AnalyticsEventResponse, 'path'> {
+	numVisits: number;
+}
+
+const analyticsEventFromServer = {path: "/about", num_visits: 200};
+const camelCasedAnalyticsEvent = camelcaseKeys<AnalyticsEvent>(analyticsEventFromServer);
+expectType<AnalyticsEvent>(camelCasedAnalyticsEvent);
 
 const fooBarArray = [{'foo-bar': true}];
 const camelFooBarArray = camelcaseKeys(fooBarArray);
