@@ -4,6 +4,10 @@
 	"description": "Convert object keys to camel case",
 	"license": "MIT",
 	"repository": "sindresorhus/camelcase-keys",
+	"types": "./index.d.ts",
+	"typesVersions": {
+		">=4.1": { "*": ["ts4.1/*"] }
+	},
 	"funding": "https://github.com/sponsors/sindresorhus",
 	"author": {
 		"name": "Sindre Sorhus",
@@ -14,12 +18,13 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd",
+		"test": "xo && ava && tsd && tsc --noEmit ts4.1/index.test-d.ts",
 		"bench": "matcha bench/bench.js"
 	},
 	"files": [
 		"index.js",
-		"index.d.ts"
+		"index.d.ts",
+		"ts4.1/index.d.ts"
 	],
 	"keywords": [
 		"map",
@@ -58,6 +63,7 @@
 		"ava": "^2.1.0",
 		"matcha": "^0.7.0",
 		"tsd": "^0.11.0",
+		"typescript": "^4.1.2",
 		"xo": "^0.25.3"
 	},
 	"xo": {
