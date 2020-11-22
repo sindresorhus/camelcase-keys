@@ -119,7 +119,7 @@ declare namespace camelcaseKeys {
 		StopPaths extends string = never,
 	> =
 		// Array case
-		T extends ReadonlyArray<any> ?
+		T extends readonly any[] ?
 		{ [K in keyof T]: CamelcaseKeys<T[K], PascalCase, Deep, Exclude, StopPaths> } :
 		// Object case
 		T extends Record<string, any> ?
@@ -155,7 +155,7 @@ declare namespace camelcaseKeys {
 	 * // => string
 	 * ```
 	 */
-	type ExtractExcludes<T extends ReadonlyArray<string | RegExp>> = { [K in keyof T]: ExtractExclude<T[K]> }[number];
+	type ExtractExcludes<T extends readonly (string | RegExp)[]> = { [K in keyof T]: ExtractExclude<T[K]> }[number];
 	/**
 	 * @internal
 	 * Turn null/undefined to another type. Helper for `DefaultValue`.
@@ -196,7 +196,7 @@ declare namespace camelcaseKeys {
 
 		@default []
 		*/
-		readonly exclude?: ReadonlyArray<string | RegExp>;
+		readonly exclude?: readonly (string | RegExp)[];
 
 		/**
 		Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
@@ -230,7 +230,7 @@ declare namespace camelcaseKeys {
 		// }
 		```
 		*/
-		readonly stopPaths?: ReadonlyArray<string>;
+		readonly stopPaths?: readonly string[];
 
 		/**
 		Uppercase the first character as in `bye-bye` → `ByeBye`.
