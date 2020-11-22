@@ -81,7 +81,8 @@ declare namespace camelcaseKeys {
 	 *
 	 * @param S a union of string literal types to camelcase.
 	 * @param PascalCase if true, the first word is also capitalized.
-	 * @param Exclude a union of string literal to exclude from camelization.
+	 * @param Exclude if it's a union of string literals, the keys matching `Exclude` are kept as-is.
+	 *        If it's unclear which keys to keep, specify `string`.
 	 *
 	 * @example
 	 * ```
