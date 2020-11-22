@@ -158,9 +158,9 @@ declare namespace camelcaseKeys {
 	type ExtractExcludes<T extends readonly (string | RegExp)[]> = { [K in keyof T]: ExtractExclude<T[K]> }[number];
 	/**
 	 * @internal
-	 * Turn null/undefined to another type. Helper for `DefaultValue`.
+	 * Turn undefined to another type. Helper for `DefaultValue`.
 	 */
-	type Default<T, U> = T extends null | undefined ? U : T;
+	type Default<T, U> = T extends undefined ? U : T;
 	/**
 	 * @internal
 	 * Pick property type if it exists, fallback to default otherwise.
