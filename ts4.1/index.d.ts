@@ -95,7 +95,7 @@ declare namespace camelcaseKeys {
 	 * // => "foo_bar" | "fooBar" | "bar_baz" | "barBaz"
 	 * ```
 	 */
-	type CamelcaseUnless<S extends string, PascalCase extends boolean, Exclude extends string> =
+	type CamelCaseUnless<S extends string, PascalCase extends boolean, Exclude extends string> =
 		// We treat `string` as "indeterminate set of strings", so return both cases in this case.
 		string extends Exclude ? S | Camelize<S, PascalCase> :
 		S extends Exclude ? S : Camelize<S, PascalCase>;
@@ -123,7 +123,7 @@ declare namespace camelcaseKeys {
 		// Object case
 		T extends Record<string, any> ?
 		{
-			[K in keyof T as CamelcaseUnless<K & string, PascalCase, Exclude>]:
+			[K in keyof T as CamelCaseUnless<K & string, PascalCase, Exclude>]:
 				Deep extends true ?
 				K extends StopPaths ?
 				T[K] :
