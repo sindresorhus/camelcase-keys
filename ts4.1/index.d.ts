@@ -181,7 +181,7 @@ declare namespace camelcaseKeys {
 	 * // => string
 	 * ```
 	 */
-	type DefaultValue<T, K extends string, U> = T extends { [key in K]?: any } ? Default<T[K], U> : U;
+	type PickWithDefault<T, K extends string, U> = T extends { [key in K]?: any } ? Default<T[K], U> : U;
 
 	interface Options {
 		/**
@@ -286,10 +286,10 @@ declare function camelcaseKeys<
 	options: O,
 ): camelcaseKeys.CamelcaseKeys<
 	T,
-	camelcaseKeys.DefaultValue<O, "pascalCase", false>,
-	camelcaseKeys.DefaultValue<O, "deep", false>,
-	camelcaseKeys.ExtractExcludes<camelcaseKeys.DefaultValue<O, "exclude", []>>,
-	camelcaseKeys.DefaultValue<O, "stopPaths", []>[number]
+	camelcaseKeys.PickWithDefault<O, "pascalCase", false>,
+	camelcaseKeys.PickWithDefault<O, "deep", false>,
+	camelcaseKeys.ExtractExcludes<camelcaseKeys.PickWithDefault<O, "exclude", []>>,
+	camelcaseKeys.PickWithDefault<O, "stopPaths", []>[number]
 >;
 
 export = camelcaseKeys;
