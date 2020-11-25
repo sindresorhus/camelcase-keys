@@ -53,7 +53,8 @@
 	"dependencies": {
 		"camelcase": "^5.3.1",
 		"map-obj": "^4.0.0",
-		"quick-lru": "^4.0.1"
+		"quick-lru": "^4.0.1",
+		"type-fest": "^0.20.0"
 	},
 	"devDependencies": {
 		"ava": "^2.1.0",

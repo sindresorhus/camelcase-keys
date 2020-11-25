@@ -1,45 +1,15 @@
+import { PascalCase, CamelCase } from "type-fest";
+
 declare namespace camelcaseKeys {
 	/**
 	 * @internal
-	 * Type-level camelization.
-	 *
-	 * It simulates `camelcase`'s behavior. Therefore.
-	 *
-	 * - Underscores `_`, hyphens `-`, periods `.`, and whitespaces ` ` are treated as word separators.
-	 * - Leading and trailing separators are removed during preprocessing.
-	 * - Consecutive separators work the same as one separator.
+	 * Dispatches to PascalCase or CamelCase.
 	 *
 	 * @param S a union of string literal types to camelcase.
-	 * @param PascalCase if true, the first word is also capitalized.
-	 *
-	 * @example
-	 * ```
-	 * type T1 = Camelize<"foo_bar-baz">;
-	 * // => "fooBarBaz"
-	 *
-	 * type T2 = Camelize<"__foo_bar__" | "some type">;
-	 * // => "fooBar" | "someType"
-	 *
-	 * type T3 = Camelize<string>;
-	 * // => string
-	 *
-	 * type T4 = Camelize<"foo_bar", true>;
-	 * // => "FooBar"
-	 *
-	 * type T5 = Camelize<"foo_bar", boolean>;
-	 * // => "fooBar" | "FooBar"
-	 * ```
+	 * @param UsePascalCase if true, the first word is also capitalized.
 	 */
-	type Camelize<S extends string, PascalCase extends boolean = false> =
-		S extends `_${infer S2}` ? Camelize<S2, PascalCase> :
-		S extends `-${infer S2}` ? Camelize<S2, PascalCase> :
-		S extends `.${infer S2}` ? Camelize<S2, PascalCase> :
-		S extends ` ${infer S2}` ? Camelize<S2, PascalCase> :
-		S extends `${infer S1}_${infer S2}` ? `${Camelize<S1, PascalCase>}${Camelize<S2, true>}` :
-		S extends `${infer S1}-${infer S2}` ? `${Camelize<S1, PascalCase>}${Camelize<S2, true>}` :
-		S extends `${infer S1}.${infer S2}` ? `${Camelize<S1, PascalCase>}${Camelize<S2, true>}` :
-		S extends `${infer S1} ${infer S2}` ? `${Camelize<S1, PascalCase>}${Camelize<S2, true>}` :
-		PascalCase extends true ? Capitalize<S> : S;
+	type Camelize<S extends string, UsePascalCase extends boolean = false> =
+		UsePascalCase extends true ? PascalCase<S> : CamelCase<S>;
 
 	/**
 	 * @internal
