@@ -1,4 +1,4 @@
-# camelcase-keys [![Build Status](https://travis-ci.com/sindresorhus/camelcase-keys.svg?branch=master)](https://travis-ci.com/github/sindresorhus/camelcase-keys)
+# camelcase-keys
 
 > Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase)
 
