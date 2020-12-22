@@ -11,7 +11,7 @@
 		"url": "https://sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=8"
+		"node": ">=10"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd",
@@ -50,15 +50,15 @@
 		"recursive"
 	],
 	"dependencies": {
-		"camelcase": "^5.3.1",
-		"map-obj": "^4.0.0",
-		"quick-lru": "^4.0.1"
+		"camelcase": "^6.2.0",
+		"map-obj": "^4.1.0",
+		"quick-lru": "^5.1.1"
 	},
 	"devDependencies": {
-		"ava": "^2.1.0",
+		"ava": "^2.4.0",
 		"matcha": "^0.7.0",
-		"tsd": "^0.11.0",
-		"xo": "^0.25.3"
+		"tsd": "^0.14.0",
+		"xo": "^0.36.1"
 	},
 	"xo": {
 		"overrides": [

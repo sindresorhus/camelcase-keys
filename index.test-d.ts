@@ -18,35 +18,35 @@ expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 expectType<{[key in 'foo-bar']: true}>(camelcaseKeys({'foo-bar': true}));
 
 expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true}),
+	camelcaseKeys({'foo-bar': true}, {deep: true})
 );
 
 expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true, pascalCase: true}),
+	camelcaseKeys({'foo-bar': true}, {deep: true, pascalCase: true})
 );
 
 expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {exclude: ['foo', /bar/]}),
+	camelcaseKeys({'foo-bar': true}, {exclude: ['foo', /bar/]})
 );
 
 expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']}),
+	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']})
 );
 
 interface SomeObject {
 	someProperty: string;
 }
 
-const someObj: SomeObject = {
+const someObject: SomeObject = {
 	someProperty: 'hello'
 };
 
-expectType<SomeObject>(camelcaseKeys(someObj));
-expectType<SomeObject[]>(camelcaseKeys([someObj]));
+expectType<SomeObject>(camelcaseKeys(someObject));
+expectType<SomeObject[]>(camelcaseKeys([someObject]));
 
 type SomeTypeAlias = {
 	someProperty: string;
-}
+};
 
 const objectWithTypeAlias = {
 	someProperty: 'this should also work'
