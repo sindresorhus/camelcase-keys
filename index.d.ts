@@ -1,3 +1,72 @@
+// eslint-disable-next-line @typescript-eslint/ban-types
+type EmptyTuple = [];
+
+type Camelcase<S extends string> = S extends '_' | '-'
+	? S
+	: S extends `${infer First}${infer Rest}`
+		? First extends '_' | '-'
+			? Camelcase<Rest>
+			: Uncapitalize<PascalCase<S>>
+		: S;
+type PascalCase<S extends string> = S extends '_' | '-'
+	? S
+	: S extends `${infer Left}-${infer Right}`
+		? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
+		: S extends `${infer Left}_${infer Right}`
+			? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
+			: S extends `${infer Left}.${infer Right}`
+				? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
+				: S extends `${infer Left} ${infer Right}`
+					? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
+					: Capitalize<S>;
+
+type IsInclude<List extends readonly unknown[] | undefined, Target> =
+	List extends undefined
+		? false
+		: List extends Readonly<EmptyTuple>
+			? false
+			: List extends readonly [infer First, ...infer Rest]
+				? First extends Target
+					? true
+					: IsInclude<Rest, Target>
+				: boolean;
+
+type ConvertArray<
+	T extends ReadonlyArray<Record<string, any>>,
+	Deep extends boolean | undefined,
+	IsPascalCase extends boolean | undefined,
+	Exclude extends ReadonlyArray<string | RegExp> | undefined
+> = T extends EmptyTuple
+	? T
+	: T extends [infer First, ...infer Rest]
+		? [
+			ConvertObject<First, Deep, IsPascalCase, Exclude>,
+			...ConvertArray<
+			Extract<Rest, ReadonlyArray<Record<string, any>>>,
+			Deep,
+			IsPascalCase,
+			Exclude
+			>
+		]
+		: Array<ConvertObject<T[number], Deep, IsPascalCase, Exclude>>;
+
+type ConvertObject<
+	T extends Record<string, any>,
+	Deep extends boolean | undefined,
+	IsPascalCase extends boolean | undefined,
+	Exclude extends readonly unknown[] | undefined
+> = {
+	[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
+		? P
+		: [IsPascalCase] extends [true]
+			? PascalCase<P>
+			: Camelcase<P>]: [Deep] extends [true]
+		? T[P] extends Record<string, any>
+			? ConvertObject<T[P], Deep, IsPascalCase, Exclude>
+			: T[P]
+		: T[P];
+};
+
 declare namespace camelcaseKeys {
 	interface Options {
 		/**
@@ -90,14 +159,25 @@ camelcaseKeys(argv);
 //=> {_: [], fooBar: true}
 ```
 */
-declare function camelcaseKeys<T extends ReadonlyArray<Record<string, any>>>(
+declare function camelcaseKeys<
+	T extends ReadonlyArray<Record<string, any>>,
+	Options extends camelcaseKeys.Options
+>(
 	input: T,
-	options?: camelcaseKeys.Options,
-): T;
+	options?: Options
+): ConvertArray<T, Options['deep'], Options['pascalCase'], Options['exclude']>;
 
-declare function camelcaseKeys<T extends Record<string, any>>(
+declare function camelcaseKeys<
+	T extends readonly unknown[],
+	Options extends camelcaseKeys.Options
+>(input: T, options?: Options): T;
+
+declare function camelcaseKeys<
+	T extends Record<string, any>,
+	Options extends camelcaseKeys.Options
+>(
 	input: T,
-	options?: camelcaseKeys.Options,
-): T;
+	options?: Options
+): ConvertObject<T, Options['deep'], Options['pascalCase'], Options['exclude']>;
 
 export = camelcaseKeys;

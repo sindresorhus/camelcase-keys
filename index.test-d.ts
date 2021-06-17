@@ -3,33 +3,61 @@ import camelcaseKeys = require('.');
 
 const fooBarObject = {'foo-bar': true};
 const camelFooBarObject = camelcaseKeys(fooBarObject);
-expectType<typeof fooBarObject>(camelFooBarObject);
+expectType<{ fooBar: boolean }>(camelFooBarObject);
 
 const fooBarArray = [{'foo-bar': true}];
 const camelFooBarArray = camelcaseKeys(fooBarArray);
-expectType<typeof fooBarArray>(camelFooBarArray);
+expectType<Array<{ fooBar: boolean }>>(camelFooBarArray);
 
-expectType<Array<{[key in 'foo-bar']: true}>>(camelcaseKeys([{'foo-bar': true}]));
+expectType<Array<{[key in 'fooBar']: boolean}>>(camelcaseKeys([{'foo-bar': true}]));
 
 expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
 
 expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 
-expectType<{[key in 'foo-bar']: true}>(camelcaseKeys({'foo-bar': true}));
+expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo-bar': true}));
+expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'--foo-bar': true}));
+expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({foo_bar: true}));
+expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo.bar': true}));
+expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo bar': true}));
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true})
+expectType<{fooBar: {fooBar: {fooBar: {fooBar: boolean}}}}>(
+	camelcaseKeys(
+		{'foo-bar': {foo_bar: {'foo.bar': {'foo bar': true}}}},
+		{deep: true}
+	)
 );
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {deep: true, pascalCase: true})
+expectType<{[key in 'FooBar']: boolean}>(
+	camelcaseKeys({'foo-bar': true}, {pascalCase: true})
+);
+expectType<{[key in 'FooBar']: boolean}>(
+	camelcaseKeys({'--foo-bar': true}, {pascalCase: true})
+);
+expectType<{[key in 'FooBar']: boolean}>(
+	camelcaseKeys({foo_bar: true}, {pascalCase: true})
+);
+expectType<{[key in 'FooBar']: boolean}>(
+	camelcaseKeys({'foo.bar': true}, {pascalCase: true})
+);
+expectType<{[key in 'FooBar']: boolean}>(
+	camelcaseKeys({'foo bar': true}, {pascalCase: true})
+);
+expectType<{FooBar: {FooBar: {FooBar: {FooBar: boolean}}}}>(
+	camelcaseKeys(
+		{'foo-bar': {foo_bar: {'foo.bar': {'foo bar': true}}}},
+		{deep: true, pascalCase: true}
+	)
 );
 
-expectType<{[key in 'foo-bar']: true}>(
-	camelcaseKeys({'foo-bar': true}, {exclude: ['foo', /bar/]})
+expectType<{[key in 'fooBar' | 'foo_bar']: boolean}>(
+	camelcaseKeys(
+		{'foo-bar': true, foo_bar: true},
+		{exclude: ['foo', 'foo_bar', /bar/] as const}
+	)
 );
 
-expectType<{[key in 'foo-bar']: true}>(
+expectType<{[key in 'fooBar']: boolean}>(
 	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']})
 );
 
