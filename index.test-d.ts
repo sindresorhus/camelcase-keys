@@ -18,12 +18,11 @@ expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo-bar': true}));
 expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'--foo-bar': true}));
 expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({foo_bar: true}));
-expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo.bar': true}));
 expectType<{[key in 'fooBar']: boolean}>(camelcaseKeys({'foo bar': true}));
 
-expectType<{fooBar: {fooBar: {fooBar: {fooBar: boolean}}}}>(
+expectType<{fooBar: {fooBar: {fooBar: boolean}}}>(
 	camelcaseKeys(
-		{'foo-bar': {foo_bar: {'foo.bar': {'foo bar': true}}}},
+		{'foo-bar': {foo_bar: {'foo bar': true}}},
 		{deep: true}
 	)
 );
@@ -38,14 +37,11 @@ expectType<{[key in 'FooBar']: boolean}>(
 	camelcaseKeys({foo_bar: true}, {pascalCase: true})
 );
 expectType<{[key in 'FooBar']: boolean}>(
-	camelcaseKeys({'foo.bar': true}, {pascalCase: true})
-);
-expectType<{[key in 'FooBar']: boolean}>(
 	camelcaseKeys({'foo bar': true}, {pascalCase: true})
 );
-expectType<{FooBar: {FooBar: {FooBar: {FooBar: boolean}}}}>(
+expectType<{FooBar: {FooBar: {FooBar: boolean}}}>(
 	camelcaseKeys(
-		{'foo-bar': {foo_bar: {'foo.bar': {'foo bar': true}}}},
+		{'foo-bar': {foo_bar: {'foo bar': true}}},
 		{deep: true, pascalCase: true}
 	)
 );

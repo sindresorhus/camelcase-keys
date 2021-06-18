@@ -1,24 +1,7 @@
+import {CamelCase, PascalCase} from 'type-fest';
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];
-
-type Camelcase<S extends string> = S extends '_' | '-'
-	? S
-	: S extends `${infer First}${infer Rest}`
-		? First extends '_' | '-'
-			? Camelcase<Rest>
-			: Uncapitalize<PascalCase<S>>
-		: S;
-type PascalCase<S extends string> = S extends '_' | '-'
-	? S
-	: S extends `${infer Left}-${infer Right}`
-		? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
-		: S extends `${infer Left}_${infer Right}`
-			? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
-			: S extends `${infer Left}.${infer Right}`
-				? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
-				: S extends `${infer Left} ${infer Right}`
-					? `${Capitalize<Lowercase<Left>>}${PascalCase<Right>}`
-					: Capitalize<S>;
 
 type IsInclude<List extends readonly unknown[] | undefined, Target> =
 	List extends undefined
@@ -60,7 +43,7 @@ type ConvertObject<
 		? P
 		: [IsPascalCase] extends [true]
 			? PascalCase<P>
-			: Camelcase<P>]: [Deep] extends [true]
+			: CamelCase<P>]: [Deep] extends [true]
 		? T[P] extends Record<string, any>
 			? ConvertObject<T[P], Deep, IsPascalCase, Exclude>
 			: T[P]
