@@ -26,6 +26,9 @@ type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 				: IsInclude<Rest, Target>
 			: boolean;
 
+/**
+ * Append a segment to dot-notation path.
+ */
 type AppendPath<S extends string, Last extends string> = S extends ''
 	? Last
 	: `${S}.${Last}`;
