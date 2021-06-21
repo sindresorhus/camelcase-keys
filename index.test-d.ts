@@ -35,16 +35,16 @@ expectType<{fooBar: {fooBar: {fooBar: boolean}}}>(
 expectType<{FooBar: boolean}>(
 	camelcaseKeys({'foo-bar': true}, {pascalCase: true})
 );
-expectType<{'FooBar': true}>(
+expectType<{FooBar: true}>(
 	camelcaseKeys({'foo-bar': true} as const, {pascalCase: true})
 );
-expectType<{'FooBar': boolean}>(
+expectType<{FooBar: boolean}>(
 	camelcaseKeys({'--foo-bar': true}, {pascalCase: true})
 );
-expectType<{'FooBar': boolean}>(
+expectType<{FooBar: boolean}>(
 	camelcaseKeys({foo_bar: true}, {pascalCase: true})
 );
-expectType<{'FooBar': boolean}>(
+expectType<{FooBar: boolean}>(
 	camelcaseKeys({'foo bar': true}, {pascalCase: true})
 );
 expectType<{FooBar: {FooBar: {FooBar: boolean}}}>(
