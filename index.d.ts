@@ -4,61 +4,78 @@ import {CamelCase, PascalCase} from 'type-fest';
 type EmptyTuple = [];
 
 /**
+ * Return a default type if input type is nil.
+ *
+ * @template T input type
+ * @template U default type
+ */
+type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T;
+
+/**
  * Check if an element is included in a tuple.
  *
  * TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
  */
-type IsInclude<List extends readonly unknown[] | undefined, Target> =
-	List extends undefined
+type IsInclude<List extends readonly unknown[], Target> = List extends undefined
+	? false
+	: List extends Readonly<EmptyTuple>
 		? false
-		: List extends Readonly<EmptyTuple>
-			? false
-			: List extends readonly [infer First, ...infer Rest]
-				? First extends Target
-					? true
-					: IsInclude<Rest, Target>
-				: boolean;
+		: List extends readonly [infer First, ...infer Rest]
+			? First extends Target
+				? true
+				: IsInclude<Rest, Target>
+			: boolean;
+
+type AppendPath<S extends string, Last extends string> = S extends ''
+	? Last
+	: `${S}.${Last}`;
 
 /**
  * Convert keys of objects in an array to camelcase strings.
  */
 type ConvertArray<
 	T extends ReadonlyArray<Record<string, any>>,
-	Deep extends boolean | undefined,
-	IsPascalCase extends boolean | undefined,
-	Exclude extends ReadonlyArray<string | RegExp> | undefined
+	Deep extends boolean,
+	IsPascalCase extends boolean,
+	Exclude extends ReadonlyArray<string | RegExp>,
+	StopPaths extends readonly string[]
 > = T extends EmptyTuple
 	? T
 	: T extends [infer First, ...infer Rest]
 		? [
-			ConvertObject<First, Deep, IsPascalCase, Exclude>,
+			ConvertObject<First, Deep, IsPascalCase, Exclude, StopPaths>,
 			...ConvertArray<
 			Extract<Rest, ReadonlyArray<Record<string, any>>>,
 			Deep,
 			IsPascalCase,
-			Exclude
+			Exclude,
+			StopPaths
 			>
 		]
-		: Array<ConvertObject<T[number], Deep, IsPascalCase, Exclude>>;
+		: Array<ConvertObject<T[number], Deep, IsPascalCase, Exclude, StopPaths>>;
 
 /**
  * Convert keys of an object to camelcase strings.
  */
 type ConvertObject<
 	T extends Record<string, any>,
-	Deep extends boolean | undefined,
-	IsPascalCase extends boolean | undefined,
-	Exclude extends readonly unknown[] | undefined
+	Deep extends boolean,
+	IsPascalCase extends boolean,
+	Exclude extends readonly unknown[],
+	StopPaths extends readonly string[],
+	Path extends string = ''
 > = {
 	[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
 		? P
 		: [IsPascalCase] extends [true]
 			? PascalCase<P>
-			: CamelCase<P>]: [Deep] extends [true]
-		? T[P] extends Record<string, any>
-			? ConvertObject<T[P], Deep, IsPascalCase, Exclude>
-			: T[P]
-		: T[P];
+			: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [true]
+		? T[P]
+		: [Deep] extends [true]
+			? T[P] extends Record<string, any>
+				? ConvertObject<T[P], Deep, IsPascalCase, Exclude, StopPaths, AppendPath<Path, P>>
+				: T[P]
+			: T[P];
 };
 
 declare namespace camelcaseKeys {
@@ -159,7 +176,13 @@ declare function camelcaseKeys<
 >(
 	input: T,
 	options?: Options
-): ConvertArray<T, Options['deep'], Options['pascalCase'], Options['exclude']>;
+): ConvertArray<
+T,
+WithDefault<Options['deep'], false>,
+WithDefault<Options['pascalCase'], false>,
+WithDefault<Options['exclude'], EmptyTuple>,
+WithDefault<Options['stopPaths'], EmptyTuple>
+>;
 
 declare function camelcaseKeys<
 	T extends readonly unknown[],
@@ -172,6 +195,12 @@ declare function camelcaseKeys<
 >(
 	input: T,
 	options?: Options
-): ConvertObject<T, Options['deep'], Options['pascalCase'], Options['exclude']>;
+): ConvertObject<
+T,
+WithDefault<Options['deep'], false>,
+WithDefault<Options['pascalCase'], false>,
+WithDefault<Options['exclude'], EmptyTuple>,
+WithDefault<Options['stopPaths'], EmptyTuple>
+>;
 
 export = camelcaseKeys;

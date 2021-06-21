@@ -64,6 +64,12 @@ expectType<{[key in 'fooBar' | 'foo_bar']: boolean}>(
 expectType<{fooBar: boolean}>(
 	camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']})
 );
+expectType<{topLevel: {fooBar: {'bar-baz': boolean}}; fooFoo: boolean}>(
+	camelcaseKeys(
+		{'top-level': {'foo-bar': {'bar-baz': true}}, 'foo-foo': true},
+		{deep: true, stopPaths: ['top-level.foo-bar'] as const}
+	)
+);
 
 expectType<Record<string, string>>(
 	camelcaseKeys({} as Record<string, string>)
