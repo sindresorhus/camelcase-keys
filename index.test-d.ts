@@ -15,6 +15,10 @@ expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
 
 expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 
+expectType<readonly [{ fooBar: true }, {fooBaz: true}]>(
+	camelcaseKeys([{'foo-bar': true}, {'foo-baz': true}] as const)
+);
+
 expectType<{fooBar: boolean}>(camelcaseKeys({'foo-bar': true}));
 expectType<{fooBar: boolean}>(camelcaseKeys({'--foo-bar': true}));
 expectType<{fooBar: boolean}>(camelcaseKeys({foo_bar: true}));
@@ -54,7 +58,7 @@ expectType<{FooBar: {FooBar: {FooBar: boolean}}}>(
 	)
 );
 
-expectType<{[key in 'fooBar' | 'foo_bar']: boolean}>(
+expectType<{fooBar: boolean; foo_bar: true}>(
 	camelcaseKeys(
 		{'foo-bar': true, foo_bar: true},
 		{exclude: ['foo', 'foo_bar', /bar/] as const}

@@ -34,52 +34,49 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 	: `${S}.${Last}`;
 
 /**
- * Convert keys of objects in an array to camelcase strings.
- */
-type ConvertArray<
-	T extends ReadonlyArray<Record<string, any>>,
-	Deep extends boolean,
-	IsPascalCase extends boolean,
-	Exclude extends ReadonlyArray<string | RegExp>,
-	StopPaths extends readonly string[]
-> = T extends EmptyTuple
-	? T
-	: T extends [infer First, ...infer Rest]
-		? [
-			ConvertObject<First, Deep, IsPascalCase, Exclude, StopPaths>,
-			...ConvertArray<
-			Extract<Rest, ReadonlyArray<Record<string, any>>>,
-			Deep,
-			IsPascalCase,
-			Exclude,
-			StopPaths
-			>
-		]
-		: Array<ConvertObject<T[number], Deep, IsPascalCase, Exclude, StopPaths>>;
-
-/**
  * Convert keys of an object to camelcase strings.
  */
-type ConvertObject<
-	T extends Record<string, any>,
+type CamelCaseKeys<
+	T extends Record<string, any> | readonly any[],
 	Deep extends boolean,
 	IsPascalCase extends boolean,
 	Exclude extends readonly unknown[],
 	StopPaths extends readonly string[],
 	Path extends string = ''
-> = {
-	[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
-		? P
-		: [IsPascalCase] extends [true]
-			? PascalCase<P>
-			: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [true]
-		? T[P]
-		: [Deep] extends [true]
-			? T[P] extends Record<string, any>
-				? ConvertObject<T[P], Deep, IsPascalCase, Exclude, StopPaths, AppendPath<Path, P>>
-				: T[P]
-			: T[P];
-};
+> = T extends readonly any[]
+	? {
+		[P in keyof T]: CamelCaseKeys<
+		T[P],
+		Deep,
+		IsPascalCase,
+		Exclude,
+		StopPaths
+		>;
+	}
+	: T extends Record<string, any>
+		? {
+			[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
+				? P
+				: [IsPascalCase] extends [true]
+					? PascalCase<P>
+					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [
+				true
+			]
+				? T[P]
+				: [Deep] extends [true]
+					? T[P] extends Record<string, any>
+						? CamelCaseKeys<
+						T[P],
+						Deep,
+						IsPascalCase,
+						Exclude,
+						StopPaths,
+						AppendPath<Path, P>
+						>
+						: T[P]
+					: T[P];
+		}
+		: T;
 
 declare namespace camelcaseKeys {
 	interface Options {
@@ -174,31 +171,12 @@ camelcaseKeys(argv);
 ```
 */
 declare function camelcaseKeys<
-	T extends ReadonlyArray<Record<string, any>>,
+	T extends Record<string, any> | readonly any[],
 	Options extends camelcaseKeys.Options
 >(
 	input: T,
 	options?: Options
-): ConvertArray<
-T,
-WithDefault<Options['deep'], false>,
-WithDefault<Options['pascalCase'], false>,
-WithDefault<Options['exclude'], EmptyTuple>,
-WithDefault<Options['stopPaths'], EmptyTuple>
->;
-
-declare function camelcaseKeys<
-	T extends readonly unknown[],
-	Options extends camelcaseKeys.Options
->(input: T, options?: Options): T;
-
-declare function camelcaseKeys<
-	T extends Record<string, any>,
-	Options extends camelcaseKeys.Options
->(
-	input: T,
-	options?: Options
-): ConvertObject<
+): CamelCaseKeys<
 T,
 WithDefault<Options['deep'], false>,
 WithDefault<Options['pascalCase'], false>,
