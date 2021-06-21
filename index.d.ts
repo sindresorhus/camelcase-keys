@@ -3,6 +3,11 @@ import {CamelCase, PascalCase} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];
 
+/**
+ * Check if an element is included in a tuple.
+ *
+ * TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
+ */
 type IsInclude<List extends readonly unknown[] | undefined, Target> =
 	List extends undefined
 		? false
@@ -14,6 +19,9 @@ type IsInclude<List extends readonly unknown[] | undefined, Target> =
 					: IsInclude<Rest, Target>
 				: boolean;
 
+/**
+ * Convert keys of objects in an array to camelcase strings.
+ */
 type ConvertArray<
 	T extends ReadonlyArray<Record<string, any>>,
 	Deep extends boolean | undefined,
@@ -33,6 +41,9 @@ type ConvertArray<
 		]
 		: Array<ConvertObject<T[number], Deep, IsPascalCase, Exclude>>;
 
+/**
+ * Convert keys of an object to camelcase strings.
+ */
 type ConvertObject<
 	T extends Record<string, any>,
 	Deep extends boolean | undefined,
