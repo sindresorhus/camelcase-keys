@@ -92,7 +92,8 @@ declare namespace camelcaseKeys {
 
 		/**
 		Exclude keys from being camel-cased.
-		If this option can be statically determined, it's recommended that adding `as const` for it.
+
+		If this option can be statically determined, it's recommended to add `as const` to it.
 
 		@default []
 		*/
@@ -100,7 +101,8 @@ declare namespace camelcaseKeys {
 
 		/**
 		Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
-		If this option can be statically determined, it's recommended that adding `as const` for it.
+
+		If this option can be statically determined, it's recommended to add `as const` to it.
 
 		@default []
 
