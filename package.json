@@ -11,7 +11,7 @@
 		"url": "https://sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=10"
+		"node": ">=12"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd",
@@ -58,7 +58,7 @@
 	"devDependencies": {
 		"ava": "^2.4.0",
 		"matcha": "^0.7.0",
-		"tsd": "^0.14.0",
+		"tsd": "^0.17.0",
 		"xo": "^0.36.1"
 	},
 	"xo": {
