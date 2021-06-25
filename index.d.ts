@@ -6,15 +6,15 @@ type EmptyTuple = [];
 /**
  * Return a default type if input type is nil.
  *
- * @template T input type
- * @template U default type
+ * @template T - Input type.
+ * @template U - Default type.
  */
 type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T;
 
 /**
- * Check if an element is included in a tuple.
- *
- * TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
+Check if an element is included in a tuple.
+
+TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
  */
 type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 	? false
@@ -27,14 +27,14 @@ type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 			: boolean;
 
 /**
- * Append a segment to dot-notation path.
+Append a segment to dot-notation path.
  */
 type AppendPath<S extends string, Last extends string> = S extends ''
 	? Last
 	: `${S}.${Last}`;
 
 /**
- * Convert keys of an object to camelcase strings.
+Convert keys of an object to camelcase strings.
  */
 type CamelCaseKeys<
 	T extends Record<string, any> | readonly any[],
@@ -44,6 +44,7 @@ type CamelCaseKeys<
 	StopPaths extends readonly string[],
 	Path extends string = ''
 > = T extends readonly any[]
+	// Handle arrays or tuples.
 	? {
 		[P in keyof T]: CamelCaseKeys<
 		T[P],
@@ -54,6 +55,7 @@ type CamelCaseKeys<
 		>;
 	}
 	: T extends Record<string, any>
+		// Handle objects.
 		? {
 			[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
 				? P
@@ -76,6 +78,7 @@ type CamelCaseKeys<
 						: T[P]
 					: T[P];
 		}
+		// Return anything else as-is.
 		: T;
 
 declare namespace camelcaseKeys {
@@ -89,6 +92,7 @@ declare namespace camelcaseKeys {
 
 		/**
 		Exclude keys from being camel-cased.
+		If this option can be statically determined, it's recommended that adding `as const` for it.
 
 		@default []
 		*/
@@ -96,6 +100,7 @@ declare namespace camelcaseKeys {
 
 		/**
 		Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+		If this option can be statically determined, it's recommended that adding `as const` for it.
 
 		@default []
 
