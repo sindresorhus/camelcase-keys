@@ -4,18 +4,18 @@ import {CamelCase, PascalCase} from 'type-fest';
 type EmptyTuple = [];
 
 /**
- * Return a default type if input type is nil.
- *
- * @template T - Input type.
- * @template U - Default type.
- */
+Return a default type if input type is nil.
+
+@template T - Input type.
+@template U - Default type.
+*/
 type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T;
 
 /**
 Check if an element is included in a tuple.
 
 TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
- */
+*/
 type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 	? false
 	: List extends Readonly<EmptyTuple>
@@ -28,14 +28,14 @@ type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 
 /**
 Append a segment to dot-notation path.
- */
+*/
 type AppendPath<S extends string, Last extends string> = S extends ''
 	? Last
 	: `${S}.${Last}`;
 
 /**
 Convert keys of an object to camelcase strings.
- */
+*/
 type CamelCaseKeys<
 	T extends Record<string, any> | readonly any[],
 	Deep extends boolean,
