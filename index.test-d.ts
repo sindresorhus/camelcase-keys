@@ -15,7 +15,7 @@ expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
 
 expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 
-expectType<readonly [{ fooBar: true }, {fooBaz: true}]>(
+expectType<readonly [{fooBar: true}, {fooBaz: true}]>(
 	camelcaseKeys([{'foo-bar': true}, {'foo-baz': true}] as const)
 );
 
