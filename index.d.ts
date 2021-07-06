@@ -179,7 +179,7 @@ camelcaseKeys(argv);
 */
 declare function camelcaseKeys<
 	T extends Record<string, any> | readonly any[],
-	Options extends camelcaseKeys.Options
+	Options extends camelcaseKeys.Options = camelcaseKeys.Options
 >(
 	input: T,
 	options?: Options
