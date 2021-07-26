@@ -1,7 +1,7 @@
 'use strict';
-const mapObj = require('map-obj');
-const camelCase = require('camelcase');
-const QuickLru = require('quick-lru');
+import mapObj from 'map-obj';
+import camelCase from 'camelcase';
+import QuickLru from 'quick-lru';
 
 const has = (array, key) => array.some(x => {
 	if (typeof x === 'string') {
@@ -68,7 +68,7 @@ const camelCaseConvert = (input, options) => {
 	return mapObj(input, makeMapper(undefined));
 };
 
-module.exports = (input, options) => {
+export default (input, options) => {
 	if (Array.isArray(input)) {
 		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
 	}
