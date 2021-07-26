@@ -52,7 +52,7 @@
 	"dependencies": {
 		"camelcase": "^6.2.0",
 		"map-obj": "^4.1.0",
-		"quick-lru": "^5.1.1",
+		"quick-lru": "^6.0.0",
 		"type-fest": "^1.2.1"
 	},
 	"devDependencies": {
