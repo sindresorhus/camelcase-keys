@@ -52,7 +52,7 @@ const objectOrUndefined: ObjectOrUndefined = {
 	}
 };
 
-expectType<{ fooBar: { fooBar: { fooBar: boolean } | undefined } }>(
+expectType<{fooBar: {fooBar: {fooBar: boolean} | undefined}}>(
 	camelcaseKeys(objectOrUndefined, {deep: true})
 );
 
