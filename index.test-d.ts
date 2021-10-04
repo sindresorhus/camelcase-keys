@@ -1,4 +1,4 @@
-import {expectType} from 'tsd';
+import {expectType, expectAssignable} from 'tsd';
 import camelcaseKeys = require('.');
 
 const fooBarObject = {'foo-bar': true};
@@ -95,11 +95,11 @@ expectType<{topLevel: {fooBar: {'bar-baz': boolean}}; fooFoo: boolean}>(
 	)
 );
 
-expectType<Record<string, string>>(
+expectAssignable<Record<string, string>>(
 	camelcaseKeys({} as Record<string, string>)
 );
 
-expectType<Record<string, string>>(
+expectAssignable<Record<string, string>>(
 	camelcaseKeys({} as Record<string, string>, {deep: true})
 );
 
