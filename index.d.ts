@@ -66,16 +66,14 @@ type CamelCaseKeys<
 			]
 				? T[P]
 				: [Deep] extends [true]
-					? T[P] extends Record<string, any>
-						? CamelCaseKeys<
-						T[P],
-						Deep,
-						IsPascalCase,
-						Exclude,
-						StopPaths,
-						AppendPath<Path, P>
-						>
-						: T[P]
+					? CamelCaseKeys<
+					T[P],
+					Deep,
+					IsPascalCase,
+					Exclude,
+					StopPaths,
+					AppendPath<Path, P>
+					>
 					: T[P];
 		}
 		// Return anything else as-is.

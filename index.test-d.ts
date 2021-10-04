@@ -36,6 +36,26 @@ expectType<{fooBar: {fooBar: {fooBar: boolean}}}>(
 	)
 );
 
+interface ObjectOrUndefined {
+	foo_bar: {
+		foo_bar: {
+			foo_bar: boolean;
+		} | undefined;
+	};
+}
+
+const objectOrUndefined: ObjectOrUndefined = {
+	foo_bar: {
+		foo_bar: {
+			foo_bar: true
+		}
+	}
+};
+
+expectType<{fooBar: {fooBar: {fooBar: boolean} | undefined}}>(
+	camelcaseKeys(objectOrUndefined, {deep: true})
+);
+
 expectType<{FooBar: boolean}>(
 	camelcaseKeys({'foo-bar': true}, {pascalCase: true})
 );
