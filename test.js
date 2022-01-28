@@ -1,6 +1,9 @@
+import {promisify} from 'util';
 import {execFile} from 'child_process';
 import test from 'ava';
 import camelcaseKeys from '.';
+
+const execFilePromise = promisify(execFile);
 
 test('main', t => {
 	t.true(camelcaseKeys({'foo-bar': true}).fooBar);
@@ -123,33 +126,21 @@ test('use locale independent camelCase transformation', async t => {
  * Executes the library with the given arguments and resolves with the parsed result.
  * Input and output is serialized via JSON.stringify() and JSON.parse().
  */
-const runInTestProcess = (camelcaseKeysArgs, childProcessOptions = {}) => {
-	return new Promise((resolve, reject) => {
-		execFile(
-			process.execPath,
-			['./child-process-for-test.js', JSON.stringify(camelcaseKeysArgs)],
-			childProcessOptions,
-			(error, stdout, stderr) => {
-				if (error) {
-					reject(error);
-					return;
-				}
+const runInTestProcess = async (camelcaseKeysArgs, childProcessOptions = {}) => {
+	const {stdout, stderr} = await execFilePromise(
+		process.execPath,
+		['./child-process-for-test.js', JSON.stringify(camelcaseKeysArgs)],
+		childProcessOptions
+	);
 
-				if (stderr !== '') {
-					reject(new Error(stderr));
-					return;
-				}
+	if (stderr) {
+		throw new Error(stderr);
+	}
 
-				let result;
-				try {
-					result = JSON.parse(stdout);
-				} catch (error) {
-					error.message += `. Stdout was "${stdout}"`;
-					reject(error);
-					return;
-				}
-
-				resolve(result);
-			});
-	});
+	try {
+		return JSON.parse(stdout);
+	} catch (error) {
+		error.message = `Error parsing "${stdout}" as JSON: ${error.message}`;
+		throw error;
+	}
 };
