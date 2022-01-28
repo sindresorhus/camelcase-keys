@@ -1,3 +1,4 @@
+import {execFile} from 'child_process';
 import test from 'ava';
 import camelcaseKeys from '.';
 
@@ -106,3 +107,49 @@ test('handle array of non-objects with `deep` option', t => {
 		input
 	);
 });
+
+test('use locale independent camelCase transformation', async t => {
+	const input = {'user-id': 123};
+	t.deepEqual(
+		// Execute the library with turkish locale
+		// A locale dependent implementation would return {userİd: 123}
+		// See https://github.com/sindresorhus/camelcase-keys/issues/81
+		await runInTestProcess([input], {env: {...process.env, LC_ALL: 'tr'}}),
+		{userId: 123}
+	);
+});
+
+/**
+ * Executes the library with the given arguments and resolves with the parsed result.
+ * Input and output is serialized via JSON.stringify() and JSON.parse().
+ */
+const runInTestProcess = (camelcaseKeysArgs, childProcessOptions = {}) => {
+	return new Promise((resolve, reject) => {
+		execFile(
+			process.execPath,
+			['./child-process-for-test.js', JSON.stringify(camelcaseKeysArgs)],
+			childProcessOptions,
+			(error, stdout, stderr) => {
+				if (error) {
+					reject(error);
+					return;
+				}
+
+				if (stderr !== '') {
+					reject(new Error(stderr));
+					return;
+				}
+
+				let result;
+				try {
+					result = JSON.parse(stdout);
+				} catch (error) {
+					error.message += `. Stdout was "${stdout}"`;
+					reject(error);
+					return;
+				}
+
+				resolve(result);
+			});
+	});
+};
