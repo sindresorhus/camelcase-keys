@@ -130,7 +130,7 @@ Input and output is serialized via `JSON.stringify()` and `JSON.parse()`.
 const runInTestProcess = async (camelcaseKeysArgs, childProcessOptions = {}) => {
 	const {stdout, stderr} = await execFilePromise(
 		process.execPath,
-		['./child-process-for-test.js', JSON.stringify(camelcaseKeysArgs)],
+		['./fixtures/child-process-for-test.js', JSON.stringify(camelcaseKeysArgs)],
 		childProcessOptions
 	);
 
