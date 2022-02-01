@@ -1,5 +1,5 @@
 'use strict';
-const camelcaseKeys = require('.');
+const camelcaseKeys = require('..');
 
 const camelcaseKeysArgs = JSON.parse(process.argv[2]);
 
