@@ -111,11 +111,11 @@ test('handle array of non-objects with `deep` option', t => {
 	);
 });
 
-test('use locale independent camelCase transformation', async t => {
+test('use locale independent camel-case transformation', async t => {
 	const input = {'user-id': 123};
 	t.deepEqual(
-		// Execute the library with turkish locale
-		// A locale dependent implementation would return {userİd: 123}
+		// Execute the library with Turkish locale.
+		// A locale dependent implementation would return `{userİd: 123}`.
 		// See https://github.com/sindresorhus/camelcase-keys/issues/81
 		await runInTestProcess([input], {env: {...process.env, LC_ALL: 'tr'}}),
 		{userId: 123}
@@ -123,9 +123,10 @@ test('use locale independent camelCase transformation', async t => {
 });
 
 /**
- * Executes the library with the given arguments and resolves with the parsed result.
- * Input and output is serialized via JSON.stringify() and JSON.parse().
- */
+Executes the library with the given arguments and resolves with the parsed result.
+
+Input and output is serialized via `JSON.stringify()` and `JSON.parse()`.
+*/
 const runInTestProcess = async (camelcaseKeysArgs, childProcessOptions = {}) => {
 	const {stdout, stderr} = await execFilePromise(
 		process.execPath,
