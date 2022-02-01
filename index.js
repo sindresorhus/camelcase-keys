@@ -52,7 +52,7 @@ const camelCaseConvert = (input, options) => {
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
 			} else {
-				const returnValue = camelCase(key, {pascalCase});
+				const returnValue = camelCase(key, {pascalCase, locale: false});
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(cacheKey, returnValue);
