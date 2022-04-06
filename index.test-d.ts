@@ -189,7 +189,7 @@ const data = {'foo-bar': true, foo_bar: true};
 const exclude = ['foo', 'foo_bar', /bar/] as const;
 
 expectType<CamelCaseKeys<typeof data, false, false, typeof exclude>>(
-	camelcaseKeys({'foo-bar': true, foo_bar: true}, {exclude})
+	camelcaseKeys(data, {exclude})
 );
 
 const nonNestedWithStopPathData = {'foo-bar': true, foo_bar: true};
