@@ -51,6 +51,36 @@ test('stopPaths option', t => {
 	);
 });
 
+test('stopKeys option', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: true, obj: {one_two: false, arr: [{three_four: true}]}}, {deep: true, stopKeys: ['obj']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: true, obj: {one_two: false, arr: [{three_four: true}]}}
+	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: true, obj: {one_two: false, arr: [{three_four: true}]}}, {deep: true, stopKeys: ['arr']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: true, obj: {oneTwo: false, arr: [{three_four: true}]}}
+	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: [[{a_b: 1}, {b_c: 2}, {c_d: 3, c_e: {foo_bar: 1}}]]}, {deep: true, stopKeys: ['c_e']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: [[{aB: 1}, {bC: 2}, {cD: 3, cE: {foo_bar: 1}}]]}
+	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({a_b: {b_c: 1, obj: {foo_bar: 1}}, a_c: {c_d: {obj: {foo_bar: 1}}}, obj: {foo_bar: 1}}, {deep: true, stopKeys: ['obj']}),
+		// eslint-disable-next-line camelcase
+		{aB: {bC: 1, obj: {foo_bar: 1}}, aC: {cD: {obj: {foo_bar: 1}}}, obj: {foo_bar: 1}}
+	);
+});
+
 test('pascalCase option only', t => {
 	t.true(camelcaseKeys({'new-foo-bar': true}, {pascalCase: true}).NewFooBar);
 });

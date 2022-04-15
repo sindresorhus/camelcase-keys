@@ -27,6 +27,9 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
 //=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
 
+camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopKeys: ['c_e']}),
+//=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
+
 // Convert object keys to pascal case
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
 //=> {FooBar: true, Nested: {UnicornRainbow: true}}
@@ -93,6 +96,49 @@ camelcaseKeys({
 		cE: {
 			e_f: 1
 		}
+	}
+}
+*/
+```
+
+##### stopKeys
+
+Type: `string[]`\
+Default: `[]`
+
+Exclude children at the given object keys from being camel-cased.
+
+```js
+camelcaseKeys({
+	a_b: 1,
+	a_c: {
+		c_d: 1,
+		foo_bar: {
+			foo_bar_a: 1
+		}
+	},
+	a_d: 1,
+	foo_bar: {
+		foo_bar_b: 1
+	}
+}, {
+	deep: true,
+	stopKeys: [
+		'foo_bar'
+	]
+}),
+/*
+{
+	aB: 1,
+	aC: {
+		cD: 1,
+		fooBar: {
+			foo_bar_a: 1
+		}
+	},
+	aD: 1,
+	fooBar: {
+		foo_bar_b: 1
 	}
 }
 */

@@ -42,6 +42,7 @@ type CamelCaseKeys<
 	IsPascalCase extends boolean,
 	Exclude extends readonly unknown[],
 	StopPaths extends readonly string[],
+	StopKeys extends readonly string[],
 	Path extends string = ''
 > = T extends readonly any[]
 	// Handle arrays or tuples.
@@ -51,7 +52,8 @@ type CamelCaseKeys<
 		Deep,
 		IsPascalCase,
 		Exclude,
-		StopPaths
+		StopPaths,
+		StopKeys
 		>;
 	}
 	: T extends Record<string, any>
@@ -61,20 +63,21 @@ type CamelCaseKeys<
 				? P
 				: [IsPascalCase] extends [true]
 					? PascalCase<P>
-					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [
-				true
-			]
+					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [true]
 				? T[P]
-				: [Deep] extends [true]
-					? CamelCaseKeys<
-					T[P],
-					Deep,
-					IsPascalCase,
-					Exclude,
-					StopPaths,
-					AppendPath<Path, P>
-					>
-					: T[P];
+				: [IsInclude<StopKeys, P>] extends [true]
+					? T[P]
+					: [Deep] extends [true]
+						? CamelCaseKeys<
+						T[P],
+						Deep,
+						IsPascalCase,
+						Exclude,
+						StopPaths,
+						StopKeys,
+						AppendPath<Path, P>
+						>
+						: T[P];
 		}
 		// Return anything else as-is.
 		: T;
@@ -134,6 +137,42 @@ declare namespace camelcaseKeys {
 		readonly stopPaths?: readonly string[];
 
 		/**
+		Exclude children at the given object key from being camel-cased.
+
+		If this option can be statically determined, it's recommended to add `as const` to it.
+
+		@default []
+
+		@example
+		```
+		camelcaseKeys({
+			a_b: 1,
+			a_c: {
+				c_d: 1,
+				c_e: {
+					e_f: 1
+				}
+			}
+		}, {
+			deep: true,
+			stopKeys: [
+				'c_e'
+			]
+		}),
+		// {
+		// 	aB: 1,
+		// 	aC: {
+		// 		cD: 1,
+		// 		cE: {
+		// 			e_f: 1
+		// 		}
+		// 	}
+		// }
+		```
+		*/
+		readonly stopKeys?: readonly string[];
+
+		/**
 		Uppercase the first character as in `bye-bye` → `ByeBye`.
 
 		@default false
@@ -186,7 +225,8 @@ T,
 WithDefault<Options['deep'], false>,
 WithDefault<Options['pascalCase'], false>,
 WithDefault<Options['exclude'], EmptyTuple>,
-WithDefault<Options['stopPaths'], EmptyTuple>
+WithDefault<Options['stopPaths'], EmptyTuple>,
+WithDefault<Options['stopKeys'], EmptyTuple>
 >;
 
 export = camelcaseKeys;

@@ -95,6 +95,16 @@ expectType<{topLevel: {fooBar: {'bar-baz': boolean}}; fooFoo: boolean}>(
 	)
 );
 
+expectType<{fooBar: boolean}>(
+	camelcaseKeys({'foo-bar': true}, {stopKeys: ['foo']})
+);
+expectType<{topLevel: {fooBar: {'bar-baz': boolean}}; fooFoo: boolean}>(
+	camelcaseKeys(
+		{'top-level': {'foo-bar': {'bar-baz': true}}, 'foo-foo': true},
+		{deep: true, stopKeys: ['foo-bar'] as const}
+	)
+);
+
 expectAssignable<Record<string, string>>(
 	camelcaseKeys({} as Record<string, string>)
 );
