@@ -57,11 +57,11 @@ export type CamelCaseKeys<
 	: T extends Record<string, any>
 		// Handle objects.
 		? {
-			[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
+			[P in keyof T as [IsInclude<Exclude, P>] extends [true]
 				? P
 				: [IsPascalCase] extends [true]
 					? PascalCase<P>
-					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [
+					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
 				true
 			]
 				? T[P]
@@ -72,7 +72,7 @@ export type CamelCaseKeys<
 					IsPascalCase,
 					Exclude,
 					StopPaths,
-					AppendPath<Path, P>
+					AppendPath<Path, P & string>
 					>
 					: T[P];
 		}

@@ -1,4 +1,4 @@
-import {expectType, expectAssignable} from 'tsd';
+import {expectType, expectAssignable, expectNotType} from 'tsd';
 import type {CamelCaseKeys} from '.';
 import camelcaseKeys from '.';
 
@@ -16,7 +16,7 @@ expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
 
 expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
 
-expectType<readonly [{ fooBar: true }, { fooBaz: true }]>(
+expectType<readonly [{ readonly fooBar: true }, { readonly fooBaz: true }]>(
 	camelcaseKeys([{'foo-bar': true}, {'foo-baz': true}] as const)
 );
 
@@ -25,10 +25,10 @@ expectType<{ fooBar: boolean }>(camelcaseKeys({'--foo-bar': true}));
 expectType<{ fooBar: boolean }>(camelcaseKeys({foo_bar: true}));
 expectType<{ fooBar: boolean }>(camelcaseKeys({'foo bar': true}));
 
-expectType<{ fooBar: true }>(camelcaseKeys({'foo-bar': true} as const));
-expectType<{ fooBar: true }>(camelcaseKeys({'--foo-bar': true} as const));
-expectType<{ fooBar: true }>(camelcaseKeys({foo_bar: true} as const));
-expectType<{ fooBar: true }>(camelcaseKeys({'foo bar': true} as const));
+expectType<{ readonly fooBar: true }>(camelcaseKeys({'foo-bar': true} as const));
+expectType<{ readonly fooBar: true }>(camelcaseKeys({'--foo-bar': true} as const));
+expectType<{ readonly fooBar: true }>(camelcaseKeys({foo_bar: true} as const));
+expectType<{ readonly fooBar: true }>(camelcaseKeys({'foo bar': true} as const));
 
 expectType<{ fooBar: { fooBar: { fooBar: boolean } } }>(
 	camelcaseKeys({'foo-bar': {foo_bar: {'foo bar': true}}}, {deep: true})
@@ -59,7 +59,7 @@ expectType<{ fooBar: { fooBar: { fooBar: boolean } | undefined } }>(
 expectType<{ FooBar: boolean }>(
 	camelcaseKeys({'foo-bar': true}, {pascalCase: true})
 );
-expectType<{ FooBar: true }>(
+expectType<{ readonly FooBar: true }>(
 	camelcaseKeys({'foo-bar': true} as const, {pascalCase: true})
 );
 expectType<{ FooBar: boolean }>(
@@ -144,16 +144,16 @@ expectType<CamelCaseKeys<{ 'foo bar': boolean }>>(
 	camelcaseKeys({'foo bar': true})
 );
 
-expectType<CamelCaseKeys<{ 'foo-bar': true }>>(
+expectType<CamelCaseKeys<{ readonly 'foo-bar': true }>>(
 	camelcaseKeys({'foo-bar': true} as const)
 );
-expectType<CamelCaseKeys<{ '--foo-bar': true }>>(
+expectType<CamelCaseKeys<{ readonly '--foo-bar': true }>>(
 	camelcaseKeys({'--foo-bar': true} as const)
 );
-expectType<CamelCaseKeys<{ foo_bar: true }>>(
+expectType<CamelCaseKeys<{ readonly foo_bar: true }>>(
 	camelcaseKeys({foo_bar: true} as const)
 );
-expectType<CamelCaseKeys<{ 'foo bar': true }>>(
+expectType<CamelCaseKeys<{ readonly 'foo bar': true }>>(
 	camelcaseKeys({'foo bar': true} as const)
 );
 
@@ -169,7 +169,7 @@ expectType<CamelCaseKeys<ObjectOrUndefined, true>>(
 expectType<CamelCaseKeys<{ 'foo-bar': boolean }, false, true>>(
 	camelcaseKeys({'foo-bar': true}, {pascalCase: true})
 );
-expectType<CamelCaseKeys<{ 'foo-bar': true }, false, true>>(
+expectType<CamelCaseKeys<{ readonly 'foo-bar': true }, false, true>>(
 	camelcaseKeys({'foo-bar': true} as const, {pascalCase: true})
 );
 expectType<CamelCaseKeys<{ '--foo-bar': boolean }, false, true>>(
@@ -203,12 +203,12 @@ const nestedWithStopPathData = {
 const stopPaths = ['top-level.foo-bar'] as const;
 expectType<
 CamelCaseKeys<
-typeof nestedWithStopPathData,
+	typeof nestedWithStopPathData,
 true,
 false,
 // eslint-disable-next-line @typescript-eslint/ban-types
 [],
-		typeof stopPaths
+	typeof stopPaths
 >
 >(camelcaseKeys(nestedWithStopPathData, {deep: true, stopPaths}));
 
@@ -226,4 +226,127 @@ expectType<CamelCaseKeys<SomeObject[]>>(camelcaseKeys([someObject]));
 expectType<CamelCaseKeys<SomeTypeAlias>>(camelcaseKeys(objectWithTypeAlias));
 expectType<CamelCaseKeys<SomeTypeAlias[]>>(
 	camelcaseKeys([objectWithTypeAlias])
+);
+
+// Verify exported type `CamelcaseKeys`
+// Mapping types and retaining properties of keys
+// https://github.com/microsoft/TypeScript/issues/13224
+
+type ObjectDataType = {
+	foo_bar?: string;
+	bar_baz?: string;
+	baz: string;
+};
+type InvalidConvertedObjectDataType = {
+	fooBar: string;
+	barBaz: string;
+	baz: string;
+};
+type ConvertedObjectDataType = {
+	fooBar?: string;
+	barBaz?: string;
+	baz: string;
+};
+
+const objectInputData: ObjectDataType = {
+	foo_bar: 'foo_bar',
+	baz: 'baz'
+};
+expectType<ConvertedObjectDataType>(camelcaseKeys(objectInputData));
+expectNotType<InvalidConvertedObjectDataType>(camelcaseKeys(objectInputData));
+
+// Array
+type ArrayDataType = ObjectDataType[];
+
+const arrayInputData: ArrayDataType = [
+	{
+		foo_bar: 'foo_bar',
+		baz: 'baz'
+	}
+];
+expectType<ConvertedObjectDataType[]>(camelcaseKeys(arrayInputData));
+expectNotType<InvalidConvertedObjectDataType[]>(camelcaseKeys(arrayInputData));
+
+// Deep
+type DeepObjectType = {
+	foo_bar?: string;
+	bar_baz?: string;
+	baz: string;
+	first_level: {
+		foo_bar?: string;
+		bar_baz?: string;
+		second_level: {
+			foo_bar: string;
+			bar_baz?: string;
+		};
+	};
+};
+type InvalidConvertedDeepObjectDataType = {
+	fooBar?: string;
+	barBaz?: string;
+	baz: string;
+	first_level?: {
+		fooBar?: string;
+		barBaz?: string;
+		second_level?: {
+			fooBar: string;
+			barBaz?: string;
+		};
+	};
+};
+type ConvertedDeepObjectDataType = {
+	fooBar?: string;
+	barBaz?: string;
+	baz: string;
+	firstLevel: {
+		foo_bar?: string;
+		bar_baz?: string;
+		second_level: {
+			foo_bar: string;
+			bar_baz?: string;
+		};
+	};
+};
+const deepInputData: DeepObjectType = {
+	foo_bar: 'foo_bar',
+	baz: 'baz',
+	first_level: {
+		bar_baz: 'bar_baz',
+		second_level: {
+			foo_bar: 'foo_bar'
+		}
+	}
+};
+expectType<ConvertedDeepObjectDataType>(
+	camelcaseKeys(deepInputData, {deep: false})
+);
+expectNotType<InvalidConvertedDeepObjectDataType>(
+	camelcaseKeys(deepInputData, {deep: false})
+);
+
+// Exclude
+type InvalidConvertedExcludeObjectDataType = {
+	foo_bar?: string;
+	bar_baz?: string;
+	baz: string;
+};
+type ConvertedExcludeObjectDataType = {
+	foo_bar?: string;
+	barBaz?: string;
+	baz: string;
+};
+const excludeInputData: ObjectDataType = {
+	foo_bar: 'foo_bar',
+	bar_baz: 'bar_baz',
+	baz: 'baz'
+};
+expectType<ConvertedExcludeObjectDataType>(
+	camelcaseKeys(excludeInputData, {
+		exclude
+	})
+);
+expectNotType<InvalidConvertedExcludeObjectDataType>(
+	camelcaseKeys(excludeInputData, {
+		exclude
+	})
 );
