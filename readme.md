@@ -106,7 +106,7 @@ camelcaseKeys({
 Type: `string[]`\
 Default: `[]`
 
-Exclude children at the given object keys from being camel-cased.
+Exclude children at the given object keys from being camel-cased. This will match any object key with the given names at any nesting level.
 
 ```js
 camelcaseKeys({

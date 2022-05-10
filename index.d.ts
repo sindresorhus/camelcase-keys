@@ -137,7 +137,7 @@ declare namespace camelcaseKeys {
 		readonly stopPaths?: readonly string[];
 
 		/**
-		Exclude children at the given object key from being camel-cased.
+		Exclude children at the given object keys from being camel-cased. This will match any object key with the given names at any nesting level.
 
 		If this option can be statically determined, it's recommended to add `as const` to it.
 
@@ -157,7 +157,7 @@ declare namespace camelcaseKeys {
 			deep: true,
 			stopKeys: [
 				'c_e'
-			]
+			] as const
 		}),
 		// {
 		// 	aB: 1,
