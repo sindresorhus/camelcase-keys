@@ -36,12 +36,12 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 /**
 Convert keys of an object to camelcase strings.
 */
-type CamelCaseKeys<
+export type CamelCaseKeys<
 	T extends Record<string, any> | readonly any[],
-	Deep extends boolean,
-	IsPascalCase extends boolean,
-	Exclude extends readonly unknown[],
-	StopPaths extends readonly string[],
+	Deep extends boolean = false,
+	IsPascalCase extends boolean = false,
+	Exclude extends readonly unknown[] = EmptyTuple,
+	StopPaths extends readonly string[] = EmptyTuple,
 	Path extends string = ''
 > = T extends readonly any[]
 	// Handle arrays or tuples.
@@ -57,11 +57,11 @@ type CamelCaseKeys<
 	: T extends Record<string, any>
 		// Handle objects.
 		? {
-			[P in keyof T & string as [IsInclude<Exclude, P>] extends [true]
+			[P in keyof T as [IsInclude<Exclude, P>] extends [true]
 				? P
 				: [IsPascalCase] extends [true]
 					? PascalCase<P>
-					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P>>] extends [
+					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
 				true
 			]
 				? T[P]
@@ -72,7 +72,7 @@ type CamelCaseKeys<
 					IsPascalCase,
 					Exclude,
 					StopPaths,
-					AppendPath<Path, P>
+					AppendPath<Path, P & string>
 					>
 					: T[P];
 		}
@@ -189,4 +189,4 @@ WithDefault<Options['exclude'], EmptyTuple>,
 WithDefault<Options['stopPaths'], EmptyTuple>
 >;
 
-export = camelcaseKeys;
+export default camelcaseKeys;
