@@ -4,14 +4,14 @@
 
 ## Install
 
-```
-$ npm install camelcase-keys
+```sh
+npm install camelcase-keys
 ```
 
 ## Usage
 
 ```js
-const camelcaseKeys = require('camelcase-keys');
+import camelcaseKeys from 'camelcase-keys';
 
 // Convert an object
 camelcaseKeys({'foo-bar': true});
@@ -33,12 +33,13 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, p
 ```
 
 ```js
-const camelcaseKeys = require('camelcase-keys');
+import {parseArgs} from 'node:utils';
+import camelcaseKeys from 'camelcase-keys';
 
-const argv = require('minimist')(process.argv.slice(2));
+const commandLineArguments = parseArgs();
 //=> {_: [], 'foo-bar': true}
 
-camelcaseKeys(argv);
+camelcaseKeys(commandLineArguments);
 //=> {_: [], fooBar: true}
 ```
 

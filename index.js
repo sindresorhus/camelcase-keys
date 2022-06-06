@@ -1,26 +1,26 @@
-'use strict';
-const mapObj = require('map-obj');
-const camelCase = require('camelcase');
-const QuickLru = require('quick-lru');
+import mapObject from 'map-obj';
+import camelCase from 'camelcase';
+import QuickLru from 'quick-lru';
 
-const has = (array, key) => array.some(x => {
-	if (typeof x === 'string') {
-		return x === key;
+const has = (array, key) => array.some(element => {
+	if (typeof element === 'string') {
+		return element === key;
 	}
 
-	x.lastIndex = 0;
-	return x.test(key);
+	element.lastIndex = 0;
+
+	return element.test(key);
 });
 
-const cache = new QuickLru({maxSize: 100000});
+const cache = new QuickLru({maxSize: 100_000});
 
-// Reproduces behavior from `map-obj`
+// Reproduces behavior from `map-obj`.
 const isObject = value =>
-	typeof value === 'object' &&
-	value !== null &&
-	!(value instanceof RegExp) &&
-	!(value instanceof Error) &&
-	!(value instanceof Date);
+	typeof value === 'object'
+		&& value !== null
+		&& !(value instanceof RegExp)
+		&& !(value instanceof Error)
+		&& !(value instanceof Date);
 
 const camelCaseConvert = (input, options) => {
 	if (!isObject(input)) {
@@ -30,7 +30,7 @@ const camelCaseConvert = (input, options) => {
 	options = {
 		deep: false,
 		pascalCase: false,
-		...options
+		...options,
 	};
 
 	const {exclude, pascalCase, stopPaths, deep} = options;
@@ -42,7 +42,7 @@ const camelCaseConvert = (input, options) => {
 			const path = parentPath === undefined ? key : `${parentPath}.${key}`;
 
 			if (!stopPathsSet.has(path)) {
-				value = mapObj(value, makeMapper(path));
+				value = mapObject(value, makeMapper(path));
 			}
 		}
 
@@ -65,13 +65,13 @@ const camelCaseConvert = (input, options) => {
 		return [key, value];
 	};
 
-	return mapObj(input, makeMapper(undefined));
+	return mapObject(input, makeMapper(undefined));
 };
 
-module.exports = (input, options) => {
+export default function camelcaseKeys(input, options) {
 	if (Array.isArray(input)) {
 		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
 	}
 
 	return camelCaseConvert(input, options);
-};
+}

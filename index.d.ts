@@ -9,12 +9,11 @@ Return a default type if input type is nil.
 @template T - Input type.
 @template U - Default type.
 */
-type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T;
+type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T; // eslint-disable-line @typescript-eslint/ban-types
 
+// TODO: Replace this with https://github.com/sindresorhus/type-fest/blob/main/source/includes.d.ts
 /**
 Check if an element is included in a tuple.
-
-TODO: Remove this once https://github.com/sindresorhus/type-fest/pull/217 is merged.
 */
 type IsInclude<List extends readonly unknown[], Target> = List extends undefined
 	? false
@@ -42,7 +41,7 @@ export type CamelCaseKeys<
 	IsPascalCase extends boolean = false,
 	Exclude extends readonly unknown[] = EmptyTuple,
 	StopPaths extends readonly string[] = EmptyTuple,
-	Path extends string = ''
+	Path extends string = '',
 > = T extends readonly any[]
 	// Handle arrays or tuples.
 	? {
@@ -62,7 +61,7 @@ export type CamelCaseKeys<
 				: [IsPascalCase] extends [true]
 					? PascalCase<P>
 					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
-				true
+				true,
 			]
 				? T[P]
 				: [Deep] extends [true]
@@ -79,68 +78,68 @@ export type CamelCaseKeys<
 		// Return anything else as-is.
 		: T;
 
-declare namespace camelcaseKeys {
-	interface Options {
-		/**
-		Recurse nested objects and objects in arrays.
+type Options = {
+	/**
+	Recurse nested objects and objects in arrays.
 
-		@default false
-		*/
-		readonly deep?: boolean;
+	@default false
+	*/
+	readonly deep?: boolean;
 
-		/**
-		Exclude keys from being camel-cased.
+	/**
+	Exclude keys from being camel-cased.
 
-		If this option can be statically determined, it's recommended to add `as const` to it.
+	If this option can be statically determined, it's recommended to add `as const` to it.
 
-		@default []
-		*/
-		readonly exclude?: ReadonlyArray<string | RegExp>;
+	@default []
+	*/
+	readonly exclude?: ReadonlyArray<string | RegExp>;
 
-		/**
-		Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+	/**
+	Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
-		If this option can be statically determined, it's recommended to add `as const` to it.
+	If this option can be statically determined, it's recommended to add `as const` to it.
 
-		@default []
+	@default []
 
-		@example
-		```
-		camelcaseKeys({
-			a_b: 1,
-			a_c: {
-				c_d: 1,
-				c_e: {
-					e_f: 1
-				}
+	@example
+	```
+	import camelcaseKeys from 'camelcase-keys';
+
+	camelcaseKeys({
+		a_b: 1,
+		a_c: {
+			c_d: 1,
+			c_e: {
+				e_f: 1
 			}
-		}, {
-			deep: true,
-			stopPaths: [
-				'a_c.c_e'
-			]
-		}),
-		// {
-		// 	aB: 1,
-		// 	aC: {
-		// 		cD: 1,
-		// 		cE: {
-		// 			e_f: 1
-		// 		}
-		// 	}
-		// }
-		```
-		*/
-		readonly stopPaths?: readonly string[];
+		}
+	}, {
+		deep: true,
+		stopPaths: [
+			'a_c.c_e'
+		]
+	}),
+	// {
+	// 	aB: 1,
+	// 	aC: {
+	// 		cD: 1,
+	// 		cE: {
+	// 			e_f: 1
+	// 		}
+	// 	}
+	// }
+	```
+	*/
+	readonly stopPaths?: readonly string[];
 
-		/**
-		Uppercase the first character as in `bye-bye` → `ByeBye`.
+	/**
+	Uppercase the first character as in `bye-bye` → `ByeBye`.
 
-		@default false
-		*/
-		readonly pascalCase?: boolean;
-	}
-}
+	@default false
+	*/
+	readonly pascalCase?: boolean;
+};
 
 /**
 Convert object keys to camel case using [`camelcase`](https://github.com/sindresorhus/camelcase).
@@ -149,7 +148,7 @@ Convert object keys to camel case using [`camelcase`](https://github.com/sindres
 
 @example
 ```
-import camelcaseKeys = require('camelcase-keys');
+import camelcaseKeys from 'camelcase-keys';
 
 // Convert an object
 camelcaseKeys({'foo-bar': true});
@@ -162,31 +161,36 @@ camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
 
+camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
+//=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
+
 // Convert object keys to pascal case
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
 //=> {FooBar: true, Nested: {UnicornRainbow: true}}
+```
 
-import minimist = require('minimist');
+@example
+```
+import {parseArgs} from 'node:utils';
+import camelcaseKeys from 'camelcase-keys';
 
-const argv = minimist(process.argv.slice(2));
+const commandLineArguments = parseArgs();
 //=> {_: [], 'foo-bar': true}
 
-camelcaseKeys(argv);
+camelcaseKeys(commandLineArguments);
 //=> {_: [], fooBar: true}
 ```
 */
-declare function camelcaseKeys<
+export default function camelcaseKeys<
 	T extends Record<string, any> | readonly any[],
-	Options extends camelcaseKeys.Options = camelcaseKeys.Options
+	OptionsType extends Options = Options,
 >(
 	input: T,
-	options?: Options
+	options?: OptionsType
 ): CamelCaseKeys<
 T,
-WithDefault<Options['deep'], false>,
-WithDefault<Options['pascalCase'], false>,
-WithDefault<Options['exclude'], EmptyTuple>,
-WithDefault<Options['stopPaths'], EmptyTuple>
+WithDefault<OptionsType['deep'], false>,
+WithDefault<OptionsType['pascalCase'], false>,
+WithDefault<OptionsType['exclude'], EmptyTuple>,
+WithDefault<OptionsType['stopPaths'], EmptyTuple>
 >;
-
-export default camelcaseKeys;
