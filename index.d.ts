@@ -45,13 +45,16 @@ export type CamelCaseKeys<
 > = T extends readonly any[]
 	// Handle arrays or tuples.
 	? {
-		[P in keyof T]: CamelCaseKeys<
-		T[P],
-		Deep,
-		IsPascalCase,
-		Exclude,
-		StopPaths
-		>;
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		[P in keyof T]: {} extends CamelCaseKeys<T[P]>
+			? T[P]
+			: CamelCaseKeys<
+			T[P],
+			Deep,
+			IsPascalCase,
+			Exclude,
+			StopPaths
+			>;
 	}
 	: T extends Record<string, any>
 		// Handle objects.
@@ -64,16 +67,19 @@ export type CamelCaseKeys<
 				true,
 			]
 				? T[P]
-				: [Deep] extends [true]
-					? CamelCaseKeys<
-					T[P],
-					Deep,
-					IsPascalCase,
-					Exclude,
-					StopPaths,
-					AppendPath<Path, P & string>
-					>
-					: T[P];
+				// eslint-disable-next-line @typescript-eslint/ban-types
+				: {} extends CamelCaseKeys<T[P]>
+					? T[P]
+					: [Deep] extends [true]
+						? CamelCaseKeys<
+						T[P],
+						Deep,
+						IsPascalCase,
+						Exclude,
+						StopPaths,
+						AppendPath<Path, P & string>
+						>
+						: T[P];
 		}
 		// Return anything else as-is.
 		: T;
