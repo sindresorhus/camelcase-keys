@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/indent */
 import {expectType, expectAssignable, expectNotType} from 'tsd';
 import camelcaseKeys, {type CamelCaseKeys} from './index.js';
 
