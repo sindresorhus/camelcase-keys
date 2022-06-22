@@ -356,21 +356,21 @@ expectType<{
 	recordBar: {foo: string};
 	promiseBaz: Promise<unknown>;
 }>(camelcaseKeys({
-			func_foo: () => 'foo',
-			record_bar: {foo: 'bar'},
-			promise_baz: new Promise(resolve => {
-				resolve(true);
-			}),
-		}));
+	func_foo: () => 'foo',
+	record_bar: {foo: 'bar'},
+	promise_baz: new Promise(resolve => {
+		resolve(true);
+	}),
+}));
 
 expectType<[
 	() => 'foo',
 	{foo: string},
 	Promise<unknown>,
 ]>(camelcaseKeys([
-			() => 'foo',
-			{foo: 'bar'},
-			new Promise(resolve => {
-				resolve(true);
-			}),
-		]));
+	() => 'foo',
+	{foo: 'bar'},
+	new Promise(resolve => {
+		resolve(true);
+	}),
+]));
