@@ -38,21 +38,26 @@ Convert keys of an object to camelcase strings.
 */
 type CamelCaseKeys<
 	T extends Record<string, any> | readonly any[],
-	Deep extends boolean,
-	IsPascalCase extends boolean,
-	Exclude extends readonly unknown[],
-	StopPaths extends readonly string[],
+	Deep extends boolean = false,
+	IsPascalCase extends boolean = false,
+	Exclude extends readonly unknown[] = EmptyTuple,
+	StopPaths extends readonly string[] = EmptyTuple,
 	Path extends string = ''
 > = T extends readonly any[]
 	// Handle arrays or tuples.
 	? {
-		[P in keyof T]: CamelCaseKeys<
-		T[P],
-		Deep,
-		IsPascalCase,
-		Exclude,
-		StopPaths
-		>;
+		[P in keyof T]: T[P] extends Record<string, any> | readonly any[]
+		// eslint-disable-next-line @typescript-eslint/ban-types
+			? {} extends CamelCaseKeys<T[P]>
+				? T[P]
+				: CamelCaseKeys<
+				T[P],
+				Deep,
+				IsPascalCase,
+				Exclude,
+				StopPaths
+				>
+			: T[P];
 	}
 	: T extends Record<string, any>
 		// Handle objects.
