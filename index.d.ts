@@ -179,7 +179,7 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, p
 
 @example
 ```
-import {parseArgs} from 'node:utils';
+import {parseArgs} from 'node:util';
 import camelcaseKeys from 'camelcase-keys';
 
 const commandLineArguments = parseArgs();
