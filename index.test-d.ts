@@ -34,7 +34,7 @@ expectType<{fooBar: {fooBar: {fooBar: boolean}}}>(
 	camelcaseKeys({'foo-bar': {foo_bar: {'foo bar': true}}}, {deep: true}),
 );
 
-interface ObjectOrUndefined {
+type ObjectOrUndefined = {
 	foo_bar: {
 		foo_bar:
 		| {
@@ -42,7 +42,7 @@ interface ObjectOrUndefined {
 		}
 		| undefined;
 	};
-}
+};
 
 const objectOrUndefined: ObjectOrUndefined = {
 	foo_bar: {
@@ -103,9 +103,9 @@ expectAssignable<Record<string, string>>(
 	camelcaseKeys({} as Record<string, string>, {deep: true}),
 );
 
-interface SomeObject {
+type SomeObject = {
 	someProperty: string;
-}
+};
 
 const someObject: SomeObject = {
 	someProperty: 'hello',

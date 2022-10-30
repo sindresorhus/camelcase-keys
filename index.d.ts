@@ -1,4 +1,4 @@
-import {CamelCase, PascalCase} from 'type-fest';
+import type {CamelCase, PascalCase} from 'type-fest';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];

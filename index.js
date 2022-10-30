@@ -22,18 +22,17 @@ const isObject = value =>
 		&& !(value instanceof Error)
 		&& !(value instanceof Date);
 
-const camelCaseConvert = (input, options) => {
+const transform = (input, options = {}) => {
 	if (!isObject(input)) {
 		return input;
 	}
 
-	options = {
-		deep: false,
-		pascalCase: false,
-		...options,
-	};
-
-	const {exclude, pascalCase, stopPaths, deep} = options;
+	const {
+		exclude,
+		pascalCase = false,
+		stopPaths,
+		deep = false,
+	} = options;
 
 	const stopPathsSet = new Set(stopPaths);
 
@@ -70,8 +69,8 @@ const camelCaseConvert = (input, options) => {
 
 export default function camelcaseKeys(input, options) {
 	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
+		return Object.keys(input).map(key => transform(input[key], options));
 	}
 
-	return camelCaseConvert(input, options);
+	return transform(input, options);
 }
