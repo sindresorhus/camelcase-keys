@@ -12,7 +12,7 @@ const has = (array, key) => array.some(element => {
 	return element.test(key);
 });
 
-const cache = new QuickLru({maxSize: 100_000});
+const cache = new QuickLru({maxSize: 100000});
 
 // Reproduces behavior from `map-obj`.
 const isObject = value =>
