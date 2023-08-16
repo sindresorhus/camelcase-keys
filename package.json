@@ -16,7 +16,7 @@
 		"default": "./index.js"
 	},
 	"engines": {
-		"node": ">=14.16"
+		"node": ">=16"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd",
@@ -28,13 +28,11 @@
 	],
 	"keywords": [
 		"map",
-		"obj",
 		"object",
 		"key",
 		"keys",
 		"value",
 		"values",
-		"val",
 		"iterate",
 		"camelcase",
 		"camel-case",
@@ -55,16 +53,16 @@
 		"recursive"
 	],
 	"dependencies": {
-		"camelcase": "^7.0.0",
-		"map-obj": "^4.3.0",
+		"camelcase": "^8.0.0",
+		"map-obj": "5.0.0",
 		"quick-lru": "^6.1.1",
-		"type-fest": "^3.1.0"
+		"type-fest": "^4.2.0"
 	},
 	"devDependencies": {
-		"ava": "^5.0.1",
+		"ava": "^5.3.1",
 		"matcha": "^0.7.0",
-		"tsd": "^0.24.1",
-		"xo": "^0.54.2"
+		"tsd": "^0.28.1",
+		"xo": "^0.56.0"
 	},
 	"xo": {
 		"overrides": [
