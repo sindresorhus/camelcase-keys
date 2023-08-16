@@ -3,6 +3,8 @@ import type {CamelCase, PascalCase} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];
 
+type ObjectOptional = Record<string, unknown> | undefined;
+
 /**
 Return a default type if input type is nil.
 
@@ -36,7 +38,7 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 Convert keys of an object to camelcase strings.
 */
 export type CamelCaseKeys<
-	T extends Record<string, any> | readonly any[],
+	T extends ObjectOptional | readonly any[],
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	Exclude extends readonly unknown[] = EmptyTuple,
@@ -45,20 +47,17 @@ export type CamelCaseKeys<
 > = T extends readonly any[]
 	// Handle arrays or tuples.
 	? {
-		[P in keyof T]: T[P] extends Record<string, any> | readonly any[]
-		// eslint-disable-next-line @typescript-eslint/ban-types
-			? {} extends CamelCaseKeys<T[P]>
-				? T[P]
-				: CamelCaseKeys<
-				T[P],
-				Deep,
-				IsPascalCase,
-				Exclude,
-				StopPaths
-				>
+		[P in keyof T]: T[P] extends Record<string, unknown> | readonly any[]
+			? CamelCaseKeys<
+			T[P],
+			Deep,
+			IsPascalCase,
+			Exclude,
+			StopPaths
+			>
 			: T[P];
 	}
-	: T extends Record<string, any>
+	: T extends Record<string, unknown>
 		// Handle objects.
 		? {
 			[P in keyof T as [IsInclude<Exclude, P>] extends [true]
@@ -69,10 +68,8 @@ export type CamelCaseKeys<
 				true,
 			]
 				? T[P]
-				// eslint-disable-next-line @typescript-eslint/ban-types
-				: {} extends CamelCaseKeys<T[P]>
-					? T[P]
-					: [Deep] extends [true]
+				: [Deep] extends [true]
+					? T[P] extends ObjectOptional | readonly any[]
 						? CamelCaseKeys<
 						T[P],
 						Deep,
@@ -81,7 +78,8 @@ export type CamelCaseKeys<
 						StopPaths,
 						AppendPath<Path, P & string>
 						>
-						: T[P];
+						: T[P]
+					: T[P];
 		}
 		// Return anything else as-is.
 		: T;
@@ -190,7 +188,7 @@ camelcaseKeys(commandLineArguments);
 ```
 */
 export default function camelcaseKeys<
-	T extends Record<string, any> | readonly any[],
+	T extends Record<string, unknown> | readonly any[],
 	OptionsType extends Options = Options,
 >(
 	input: T,

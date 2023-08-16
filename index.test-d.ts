@@ -33,6 +33,9 @@ expectType<{readonly fooBar: true}>(camelcaseKeys({'foo bar': true} as const));
 expectType<{fooBar: {fooBar: {fooBar: boolean}}}>(
 	camelcaseKeys({'foo-bar': {foo_bar: {'foo bar': true}}}, {deep: true}),
 );
+expectType<{fooBar: Array<{fooBar: {fooBar: boolean}}>}>(
+	camelcaseKeys({'foo-bar': [{foo_bar: {'foo bar': true}}]}, {deep: true}),
+);
 
 type ObjectOrUndefined = {
 	foo_bar: {
@@ -113,6 +116,8 @@ const someObject: SomeObject = {
 
 expectType<SomeObject>(camelcaseKeys(someObject));
 expectType<SomeObject[]>(camelcaseKeys([someObject]));
+expectType<{someObject: SomeObject}>(camelcaseKeys({some_object: someObject}));
+expectType<Array<{someObject: SomeObject}>>(camelcaseKeys([{some_object: someObject}]));
 
 type SomeTypeAlias = {
 	someProperty: string;
@@ -280,6 +285,13 @@ type DeepObjectType = {
 			bar_baz?: string;
 		};
 	};
+	optional_first_level?: {
+		foo_bar?: string;
+		bar_baz?: true;
+		optional_second_level?: {
+			foo_bar: number;
+		};
+	};
 };
 type InvalidConvertedDeepObjectDataType = {
 	fooBar?: string;
@@ -291,6 +303,13 @@ type InvalidConvertedDeepObjectDataType = {
 		second_level?: {
 			fooBar: string;
 			barBaz?: string;
+		};
+	};
+	optional_first_level?: {
+		fooBar?: string;
+		barBaz?: true;
+		optional_second_level?: {
+			fooBar: number;
 		};
 	};
 };
@@ -306,6 +325,33 @@ type ConvertedDeepObjectDataType = {
 			bar_baz?: string;
 		};
 	};
+	optionalFirstLevel?: {
+		foo_bar?: string;
+		bar_baz?: true;
+		optional_second_level?: {
+			foo_bar: number;
+		};
+	};
+};
+type ConvertedDeepObjectDataTypeWithDeepTrue = {
+	fooBar?: string | undefined;
+	barBaz?: string | undefined;
+	baz: string;
+	firstLevel: {
+		fooBar?: string | undefined;
+		barBaz?: string | undefined;
+		secondLevel: {
+			fooBar: string;
+			barBaz?: string | undefined;
+		};
+	};
+	optionalFirstLevel?: {
+		fooBar?: string;
+		barBaz?: true;
+		optionalSecondLevel?: {
+			fooBar: number;
+		};
+	};
 };
 const deepInputData: DeepObjectType = {
 	foo_bar: 'foo_bar',
@@ -319,6 +365,9 @@ const deepInputData: DeepObjectType = {
 };
 expectType<ConvertedDeepObjectDataType>(
 	camelcaseKeys(deepInputData, {deep: false}),
+);
+expectType<ConvertedDeepObjectDataTypeWithDeepTrue>(
+	camelcaseKeys(deepInputData, {deep: true}),
 );
 expectNotType<InvalidConvertedDeepObjectDataType>(
 	camelcaseKeys(deepInputData, {deep: false}),
