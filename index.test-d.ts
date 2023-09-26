@@ -85,7 +85,7 @@ expectType<{fooBAR: boolean}>(
 	camelcaseKeys({'foo-BAR': true}, {preserveConsecutiveUppercase: true}),
 );
 expectType<{readonly fooBAR: true}>(
-	camelcaseKeys({'foo_BAR': true} as const, {preserveConsecutiveUppercase: true}),
+	camelcaseKeys({foo_BAR: true} as const, {preserveConsecutiveUppercase: true}),
 );
 expectType<{fooBAR: boolean}>(
 	camelcaseKeys({'--foo-BAR': true}, {preserveConsecutiveUppercase: true}),
