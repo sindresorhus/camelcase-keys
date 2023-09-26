@@ -41,6 +41,7 @@ export type CamelCaseKeys<
 	T extends ObjectOptional | readonly any[],
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
+	PreserveConsecutiveUppercase extends boolean = false,
 	Exclude extends readonly unknown[] = EmptyTuple,
 	StopPaths extends readonly string[] = EmptyTuple,
 	Path extends string = '',
@@ -52,6 +53,7 @@ export type CamelCaseKeys<
 			T[P],
 			Deep,
 			IsPascalCase,
+			PreserveConsecutiveUppercase,
 			Exclude,
 			StopPaths
 			>
@@ -64,7 +66,7 @@ export type CamelCaseKeys<
 				? P
 				: [IsPascalCase] extends [true]
 					? PascalCase<P>
-					: CamelCase<P>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
+					: CamelCase<P, {preserveConsecutiveUppercase: PreserveConsecutiveUppercase}>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
 				true,
 			]
 				? T[P]
@@ -74,6 +76,7 @@ export type CamelCaseKeys<
 						T[P],
 						Deep,
 						IsPascalCase,
+						PreserveConsecutiveUppercase,
 						Exclude,
 						StopPaths,
 						AppendPath<Path, P & string>
@@ -145,6 +148,14 @@ type Options = {
 	@default false
 	*/
 	readonly pascalCase?: boolean;
+
+	/**
+	Preserve consecutive uppercase characters: `foo_BAR` → `FooBAR`.
+
+	@default false
+	*/
+	readonly preserveConsecutiveUppercase?: boolean;
+
 };
 
 /**
@@ -197,6 +208,7 @@ export default function camelcaseKeys<
 T,
 WithDefault<OptionsType['deep'], false>,
 WithDefault<OptionsType['pascalCase'], false>,
+WithDefault<OptionsType['preserveConsecutiveUppercase'], false>,
 WithDefault<OptionsType['exclude'], EmptyTuple>,
 WithDefault<OptionsType['stopPaths'], EmptyTuple>
 >;
