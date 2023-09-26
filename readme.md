@@ -27,6 +27,9 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
 //=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
 
+camelcaseKeys({'foo-BAR': true, nested: {unicorn_RAINbow: true}}, {deep: true, preserveConsecutiveUppercase: true});
+//=> {fooBAR: true, nested: {unicornRAINbow: true}}
+
 // Convert object keys to pascal case
 camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
 //=> {FooBar: true, Nested: {UnicornRainbow: true}}
@@ -112,6 +115,13 @@ Type: `boolean`\
 Default: `false`
 
 Uppercase the first character as in `bye-bye` → `ByeBye`.
+
+##### preserveConsecutiveUppercase
+
+Type: `boolean`\
+Default: `false`
+
+Preserve consecutive uppercase characters: `foo-BAR` → `FooBAR`.
 
 ## Related
 
