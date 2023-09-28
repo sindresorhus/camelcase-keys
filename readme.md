@@ -27,6 +27,9 @@ camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
 //=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
 
+// preserve Uppercase if they are consecutive
+camelcaseKeys({'foo-BAR': true, nested: {unicorn_RAINbow: true}}, {deep: true, preserveConsecutiveUppercase: false});
+//=> {fooBar: true, nested: {unicornRainbow: true}}
 camelcaseKeys({'foo-BAR': true, nested: {unicorn_RAINbow: true}}, {deep: true, preserveConsecutiveUppercase: true});
 //=> {fooBAR: true, nested: {unicornRAINbow: true}}
 
@@ -121,7 +124,7 @@ Uppercase the first character as in `bye-bye` → `ByeBye`.
 Type: `boolean`\
 Default: `false`
 
-Preserve consecutive uppercase characters: `foo-BAR` → `FooBAR`.
+Preserve consecutive uppercase characters: `foo-BAR` → `FooBAR` if true vs `foo-BAR` → `FooBar` if false
 
 ## Related
 
