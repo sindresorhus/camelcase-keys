@@ -20,22 +20,6 @@ camelcaseKeys({'foo-bar': true});
 // Convert an array of objects
 camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
 //=> [{fooBar: true}, {barFoo: false}]
-
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
-//=> {fooBar: true, nested: {unicornRainbow: true}}
-
-camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
-//=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
-
-// preserve Uppercase if they are consecutive
-camelcaseKeys({'foo-BAR': true, nested: {unicorn_RAINbow: true}}, {deep: true, preserveConsecutiveUppercase: false});
-//=> {fooBar: true, nested: {unicornRainbow: true}}
-camelcaseKeys({'foo-BAR': true, nested: {unicorn_RAINbow: true}}, {deep: true, preserveConsecutiveUppercase: true});
-//=> {fooBAR: true, nested: {unicornRAINbow: true}}
-
-// Convert object keys to pascal case
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
-//=> {FooBar: true, Nested: {UnicornRainbow: true}}
 ```
 
 ```js
@@ -70,15 +54,77 @@ Default: `[]`
 
 Exclude keys from being camel-cased.
 
+##### deep
+
+Type: `boolean`\
+Default: `false`
+
+Recurse nested objects and objects in arrays.
+
+```js
+import camelcaseKeys from 'camelcase-keys';
+
+const object = {
+	'foo-bar': true,
+	nested: {
+		unicorn_rainbow: true
+	}
+};
+
+camelcaseKeys(object, {deep: true});
+//=> {fooBar: true, nested: {unicornRainbow: true}}
+
+camelcaseKeys(object, {deep: false});
+//=> {fooBar: true, nested: {unicorn_rainbow: true}}
+```
+
+##### pascalCase
+
+Type: `boolean`\
+Default: `false`
+
+Uppercase the first character: `bye-bye` → `ByeBye`
+
+```js
+import camelcaseKeys from 'camelcase-keys';
+
+camelcaseKeys({'foo-bar': true}, {pascalCase: true});
+//=> {FooBar: true}
+
+camelcaseKeys({'foo-bar': true}, {pascalCase: false});
+//=> {fooBar: true}
+````
+
+##### preserveConsecutiveUppercase
+
+Type: `boolean`\
+Default: `false`
+
+Preserve consecutive uppercase characters: `foo-BAR` → `FooBAR`
+
+```js
+import camelcaseKeys from 'camelcase-keys';
+
+camelcaseKeys({'foo-BAR': true}, {preserveConsecutiveUppercase: true});
+//=> {fooBAR: true}
+
+camelcaseKeys({'foo-BAR': true}, {preserveConsecutiveUppercase: false});
+//=> {fooBar: true}
+````
+
 ##### stopPaths
 
 Type: `string[]`\
 Default: `[]`
 
-Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+Exclude children at the given object paths in dot-notation from being camel-cased.
+
+For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
 ```js
-camelcaseKeys({
+import camelcaseKeys from 'camelcase-keys';
+
+const object = {
 	a_b: 1,
 	a_c: {
 		c_d: 1,
@@ -86,7 +132,9 @@ camelcaseKeys({
 			e_f: 1
 		}
 	}
-}, {
+};
+
+camelcaseKeys(object, {
 	deep: true,
 	stopPaths: [
 		'a_c.c_e'
@@ -104,27 +152,6 @@ camelcaseKeys({
 }
 */
 ```
-
-##### deep
-
-Type: `boolean`\
-Default: `false`
-
-Recurse nested objects and objects in arrays.
-
-##### pascalCase
-
-Type: `boolean`\
-Default: `false`
-
-Uppercase the first character as in `bye-bye` → `ByeBye`.
-
-##### preserveConsecutiveUppercase
-
-Type: `boolean`\
-Default: `false`
-
-Preserve consecutive uppercase characters: `foo-BAR` → `FooBAR` if true vs `foo-BAR` → `FooBar` if false
 
 ## Related
 
