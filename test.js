@@ -52,6 +52,19 @@ test('stopPaths option', t => {
 	);
 });
 
+test('preserveConsecutiveUppercase option only', t => {
+	// eslint-disable-next-line camelcase
+	t.true(camelcaseKeys({new_foo_BAR: true}, {preserveConsecutiveUppercase: true}).newFooBAR);
+});
+
+test('preserveConsecutiveUppercase and deep options', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({p_FOO_bar: true, p_obj: {p_two: false, p_arr: [{p_THREE_four: true}]}}, {deep: true, preserveConsecutiveUppercase: true}),
+		{pFOOBar: true, pObj: {pTwo: false, pArr: [{pTHREEFour: true}]}},
+	);
+});
+
 test('pascalCase option only', t => {
 	t.true(camelcaseKeys({'new-foo-bar': true}, {pascalCase: true}).NewFooBar);
 });

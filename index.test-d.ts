@@ -81,6 +81,31 @@ expectType<{FooBar: {FooBar: {FooBar: boolean}}}>(
 	),
 );
 
+expectType<{fooBAR: boolean}>(
+	camelcaseKeys({'foo-BAR': true}, {preserveConsecutiveUppercase: true}),
+);
+expectType<{readonly fooBAR: true}>(
+	camelcaseKeys({foo_BAR: true} as const, {preserveConsecutiveUppercase: true}),
+);
+expectType<{fooBAR: boolean}>(
+	camelcaseKeys({'--foo-BAR': true}, {preserveConsecutiveUppercase: true}),
+);
+expectType<{fooBAR: boolean}>(
+	camelcaseKeys({foo_BAR: true}, {preserveConsecutiveUppercase: true}),
+);
+expectType<{fooBAR: boolean}>(
+	camelcaseKeys({'foo BAR': true}, {preserveConsecutiveUppercase: true}),
+);
+expectType<{FooBAR: boolean}>(
+	camelcaseKeys({'foo BAR': true}, {preserveConsecutiveUppercase: true, pascalCase: true}),
+);
+expectType<{fooBAR: {fooBAR: {fooBAR: boolean}}}>(
+	camelcaseKeys(
+		{'foo-BAR': {foo_BAR: {'foo BAR': true}}},
+		{deep: true, preserveConsecutiveUppercase: true},
+	),
+);
+
 expectType<{fooBar: boolean; foo_bar: true}>(
 	camelcaseKeys(
 		{'foo-bar': true, foo_bar: true},
@@ -193,13 +218,13 @@ expectType<CamelCaseKeys<typeof nestedItem, true, true>>(
 const data = {'foo-bar': true, foo_bar: true};
 const exclude = ['foo', 'foo_bar', /bar/] as const;
 
-expectType<CamelCaseKeys<typeof data, false, false, typeof exclude>>(
+expectType<CamelCaseKeys<typeof data, false, false, false, typeof exclude>>(
 	camelcaseKeys(data, {exclude}),
 );
 
 const nonNestedWithStopPathData = {'foo-bar': true, foo_bar: true};
 expectType<
-CamelCaseKeys<typeof nonNestedWithStopPathData, false, false, ['foo']>
+CamelCaseKeys<typeof nonNestedWithStopPathData, false, false, false, ['foo']>
 >(camelcaseKeys({'foo-bar': true}, {stopPaths: ['foo']}));
 const nestedWithStopPathData = {
 	'top-level': {'foo-bar': {'bar-baz': true}},
@@ -210,6 +235,7 @@ expectType<
 CamelCaseKeys<
 	typeof nestedWithStopPathData,
 true,
+false,
 false,
 // eslint-disable-next-line @typescript-eslint/ban-types
 [],

@@ -32,6 +32,7 @@ const transform = (input, options = {}) => {
 		pascalCase = false,
 		stopPaths,
 		deep = false,
+		preserveConsecutiveUppercase = false,
 	} = options;
 
 	const stopPathsSet = new Set(stopPaths);
@@ -51,7 +52,7 @@ const transform = (input, options = {}) => {
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
 			} else {
-				const returnValue = camelCase(key, {pascalCase, locale: false});
+				const returnValue = camelCase(key, {pascalCase, locale: false, preserveConsecutiveUppercase});
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(cacheKey, returnValue);
