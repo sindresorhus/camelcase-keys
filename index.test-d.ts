@@ -453,3 +453,21 @@ expectType<[
 		}),
 	]),
 );
+
+// Test for function with inferred type
+// eslint-disable-next-line @typescript-eslint/comma-dangle
+function camelcaseKeysDeep<
+	T extends Record<string, unknown> | readonly unknown[]
+>(response: T): CamelCaseKeys<T, true> {
+	return camelcaseKeys(response, {deep: true});
+}
+
+// eslint-disable-next-line @typescript-eslint/comma-dangle
+function camelcaseKeysPascalCase<
+	T extends Record<string, unknown> | readonly unknown[]
+>(response: T): CamelCaseKeys<T, false, true> {
+	return camelcaseKeys(response, {pascalCase: true});
+}
+
+expectType<{fooBar: {hogeHoge: string}}>(camelcaseKeysDeep({foo_bar: {hoge_hoge: 'hoge_hoge'}}));
+expectType<{FooBar: string}>(camelcaseKeysPascalCase({foo_bar: 'foo_bar'}));

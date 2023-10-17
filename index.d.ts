@@ -11,7 +11,7 @@ Return a default type if input type is nil.
 @template T - Input type.
 @template U - Default type.
 */
-type WithDefault<T, U extends T> = T extends undefined | void | null ? U : T; // eslint-disable-line @typescript-eslint/ban-types
+type WithDefault<T, U> = T extends undefined | void | null ? U : T; // eslint-disable-line @typescript-eslint/ban-types
 
 // TODO: Replace this with https://github.com/sindresorhus/type-fest/blob/main/source/includes.d.ts
 /**
@@ -237,9 +237,9 @@ export default function camelcaseKeys<
 	options?: OptionsType
 ): CamelCaseKeys<
 T,
-WithDefault<OptionsType['deep'], false>,
-WithDefault<OptionsType['pascalCase'], false>,
-WithDefault<OptionsType['preserveConsecutiveUppercase'], false>,
-WithDefault<OptionsType['exclude'], EmptyTuple>,
-WithDefault<OptionsType['stopPaths'], EmptyTuple>
+WithDefault<'deep' extends keyof OptionsType ? OptionsType['deep'] : undefined, false>,
+WithDefault<'pascalCase' extends keyof OptionsType ? OptionsType['pascalCase'] : undefined, false>,
+WithDefault<'preserveConsecutiveUppercase' extends keyof OptionsType ? OptionsType['preserveConsecutiveUppercase'] : undefined, false>,
+WithDefault<'exclude' extends keyof OptionsType ? OptionsType['exclude'] : undefined, EmptyTuple>,
+WithDefault<'stopPaths' extends keyof OptionsType ? OptionsType['stopPaths'] : undefined, EmptyTuple>
 >;
