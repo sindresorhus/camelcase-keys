@@ -3,7 +3,8 @@ import type {CamelCase, PascalCase} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];
 
-type ObjectOptional = Record<string, unknown> | undefined;
+// Allow union (ex. optional property(undefined), null)
+type ObjectUnion = Record<string, unknown> | unknown;
 
 /**
 Return a default type if input type is nil.
@@ -38,7 +39,7 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 Convert keys of an object to camelcase strings.
 */
 export type CamelCaseKeys<
-	T extends ObjectOptional | readonly any[],
+	T extends ObjectUnion | readonly any[],
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	PreserveConsecutiveUppercase extends boolean = false,
@@ -71,7 +72,7 @@ export type CamelCaseKeys<
 			]
 				? T[P]
 				: [Deep] extends [true]
-					? T[P] extends ObjectOptional | readonly any[]
+					? T[P] extends ObjectUnion | readonly any[]
 						? CamelCaseKeys<
 						T[P],
 						Deep,

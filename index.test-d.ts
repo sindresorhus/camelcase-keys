@@ -471,3 +471,16 @@ function camelcaseKeysPascalCase<
 
 expectType<{fooBar: {hogeHoge: string}}>(camelcaseKeysDeep({foo_bar: {hoge_hoge: 'hoge_hoge'}}));
 expectType<{FooBar: string}>(camelcaseKeysPascalCase({foo_bar: 'foo_bar'}));
+
+// Test for union type
+// eslint-disable-next-line @typescript-eslint/ban-types
+const objectCamelcased: CamelCaseKeys<{foo_bar: {foo_prop: string} | null}, true>
+	= camelcaseKeys({foo_bar: {foo_prop: 'foo_props'}}, {deep: true});
+// eslint-disable-next-line @typescript-eslint/ban-types
+const nullCamelcased: CamelCaseKeys<{foo_bar: {foo_prop: string} | null}, true>
+	= camelcaseKeys({foo_bar: null}, {deep: true});
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+expectType<{fooBar: {fooProp: string} | null}>(objectCamelcased);
+// eslint-disable-next-line @typescript-eslint/ban-types
+expectType<{fooBar: {fooProp: string} | null}>(nullCamelcased);
