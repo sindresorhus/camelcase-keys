@@ -3,7 +3,7 @@ import type {CamelCase, PascalCase} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type EmptyTuple = [];
 
-// Allow union (ex. optional property(undefined), null)
+// Allow union with, for example, `undefined` and `null`.
 type ObjectUnion = Record<string, unknown> | unknown;
 
 /**
