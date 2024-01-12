@@ -39,9 +39,9 @@ camelcaseKeys(commandLineArguments);
 
 #### input
 
-Type: `Record<string, unknown> | Record<string, unknown>[]`
+Type: `Record<string, unknown> | ReadonlyArray<Record<string, unknown>>`
 
-An `Record<string, unknown>` or array of any to camel-case.
+An `Record<string, unknown>` or array of `Record<string, unknown>` to camel-case.
 
 #### options
 
