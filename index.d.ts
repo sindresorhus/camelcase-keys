@@ -231,7 +231,7 @@ camelcaseKeys(commandLineArguments);
 ```
 */
 export default function camelcaseKeys<
-	T extends Record<string, unknown> | readonly any[],
+	T extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>,
 	OptionsType extends Options = Options,
 >(
 	input: T,
