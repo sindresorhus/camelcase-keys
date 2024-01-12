@@ -39,13 +39,13 @@ camelcaseKeys(commandLineArguments);
 
 #### input
 
-Type: `object | object[]`
+Type: `Record<string, unknown> | any[]`
 
-An object or array of objects to camel-case.
+An `Record<string, unknown>` or array of any to camel-case.
 
 #### options
 
-Type: `object`
+Type: `Options`
 
 ##### exclude
 
