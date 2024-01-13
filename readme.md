@@ -39,9 +39,9 @@ camelcaseKeys(commandLineArguments);
 
 #### input
 
-Type: `object | object[]`
+Type: `Record<string, unknown> | ReadonlyArray<Record<string, unknown>>`
 
-An object or array of objects to camel-case.
+A plain object or array of plain objects to camel-case.
 
 #### options
 

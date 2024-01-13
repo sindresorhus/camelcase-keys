@@ -39,17 +39,17 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 Convert keys of an object to camelcase strings.
 */
 export type CamelCaseKeys<
-	T extends ObjectUnion | readonly any[],
+	T extends ObjectUnion | ReadonlyArray<Record<string, unknown>>,
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	PreserveConsecutiveUppercase extends boolean = false,
 	Exclude extends readonly unknown[] = EmptyTuple,
 	StopPaths extends readonly string[] = EmptyTuple,
 	Path extends string = '',
-> = T extends readonly any[]
+> = T extends ReadonlyArray<Record<string, unknown>>
 	// Handle arrays or tuples.
 	? {
-		[P in keyof T]: T[P] extends Record<string, unknown> | readonly any[]
+		[P in keyof T]: T[P] extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>
 			? CamelCaseKeys<
 			T[P],
 			Deep,
@@ -72,7 +72,7 @@ export type CamelCaseKeys<
 			]
 				? T[P]
 				: [Deep] extends [true]
-					? T[P] extends ObjectUnion | readonly any[]
+					? T[P] extends ObjectUnion | ReadonlyArray<Record<string, unknown>>
 						? CamelCaseKeys<
 						T[P],
 						Deep,
@@ -231,7 +231,7 @@ camelcaseKeys(commandLineArguments);
 ```
 */
 export default function camelcaseKeys<
-	T extends Record<string, unknown> | readonly any[],
+	T extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>,
 	OptionsType extends Options = Options,
 >(
 	input: T,

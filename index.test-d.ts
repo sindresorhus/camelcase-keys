@@ -12,10 +12,6 @@ expectType<Array<{fooBar: boolean}>>(camelFooBarArray);
 
 expectType<Array<{fooBar: boolean}>>(camelcaseKeys([{'foo-bar': true}]));
 
-expectType<string[]>(camelcaseKeys(['name 1', 'name 2']));
-
-expectType<string[]>(camelcaseKeys(['name 1', 'name 2'], {deep: true}));
-
 expectType<readonly [{readonly fooBar: true}, {readonly fooBaz: true}]>(
 	camelcaseKeys([{'foo-bar': true}, {'foo-baz': true}] as const),
 );
@@ -440,31 +436,17 @@ expectType<{
 	}),
 );
 
-expectType<[
-	() => 'foo',
-	{foo: string},
-	Promise<unknown>,
-]>(
-	camelcaseKeys([
-		() => 'foo',
-		{foo: 'bar'},
-		new Promise(resolve => {
-			resolve(true);
-		}),
-	]),
-);
-
 // Test for function with inferred type
 // eslint-disable-next-line @typescript-eslint/comma-dangle
 function camelcaseKeysDeep<
-	T extends Record<string, unknown> | readonly unknown[]
+	T extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>
 >(response: T): CamelCaseKeys<T, true> {
 	return camelcaseKeys(response, {deep: true});
 }
 
 // eslint-disable-next-line @typescript-eslint/comma-dangle
 function camelcaseKeysPascalCase<
-	T extends Record<string, unknown> | readonly unknown[]
+	T extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>
 >(response: T): CamelCaseKeys<T, false, true> {
 	return camelcaseKeys(response, {pascalCase: true});
 }
