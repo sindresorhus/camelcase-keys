@@ -45,7 +45,7 @@ An `Record<string, unknown>` or array of `Record<string, unknown>` to camel-case
 
 #### options
 
-Type: `Options`
+Type: `object`
 
 ##### exclude
 
