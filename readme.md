@@ -41,7 +41,7 @@ camelcaseKeys(commandLineArguments);
 
 Type: `Record<string, unknown> | ReadonlyArray<Record<string, unknown>>`
 
-An `Record<string, unknown>` or array of `Record<string, unknown>` to camel-case.
+A plain object or array of plain objects to camel-case.
 
 #### options
 
