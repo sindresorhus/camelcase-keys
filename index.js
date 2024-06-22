@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import mapObject from 'map-obj';
 import camelCase from 'camelcase';
 import QuickLru from 'quick-lru';
@@ -20,7 +21,8 @@ const isObject = value =>
 		&& value !== null
 		&& !(value instanceof RegExp)
 		&& !(value instanceof Error)
-		&& !(value instanceof Date);
+		&& !(value instanceof Date)
+		&& !(value instanceof Buffer);
 
 const transform = (input, options = {}) => {
 	if (!isObject(input)) {

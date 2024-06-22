@@ -1,6 +1,7 @@
 import process from 'node:process';
 import {promisify} from 'node:util';
 import {execFile} from 'node:child_process';
+import {Buffer} from 'node:buffer';
 import test from 'ava';
 import camelcaseKeys from './index.js';
 
@@ -134,6 +135,11 @@ test('use locale independent camel-case transformation', async t => {
 		await runInTestProcess([input], {env: {...process.env, LC_ALL: 'tr'}}),
 		{userId: 123},
 	);
+});
+
+test('do not deep convert buffer', t => {
+	const input = {foo: Buffer.from('foo')};
+	t.true(camelcaseKeys(input, {deep: true}).foo instanceof Buffer);
 });
 
 /**
