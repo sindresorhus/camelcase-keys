@@ -18,9 +18,7 @@ const cache = new QuickLru({maxSize: 100_000});
 const isObject = value =>
 	typeof value === 'object'
 		&& value !== null
-		&& !(value instanceof RegExp)
-		&& !(value instanceof Error)
-		&& !(value instanceof Date);
+		&& (Array.isArray(value) || Object.getPrototypeOf(value) === Object.prototype);
 
 const transform = (input, options = {}) => {
 	if (!isObject(input)) {
