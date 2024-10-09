@@ -137,9 +137,9 @@ test('use locale independent camel-case transformation', async t => {
 	);
 });
 
-test('do not deep convert buffer', t => {
+test('do not deep convert data', t => {
 	const input = {foo: Buffer.from('foo')};
-	t.true(camelcaseKeys(input, {deep: true}).foo instanceof Buffer);
+	t.true(camelcaseKeys(input, {deep: true}).foo instanceof Uint8Array);
 });
 
 /**
