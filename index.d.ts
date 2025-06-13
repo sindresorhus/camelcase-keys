@@ -99,6 +99,38 @@ export type Options = {
 	readonly exclude?: ReadonlyArray<string | RegExp>;
 
 	/**
+	 * Exclude children of the given keys from being camel-cased.
+	 * @default []
+	 * @example
+	 * ```
+	 * decamelizeKeys({
+	 * 		a_b: 1,
+	 *		a_c: {
+	 *			c_d: 1,
+	 *			c_e: {
+	 *				e_f: 1
+	 *			}
+	 *		}
+	 *	}, {
+	 *    deep: true,
+	 *    excludeChildren: [
+	 *    	'a_c'
+	 *    ]
+	 * })
+	 *
+	 * // {
+	 * // 	aB: 1,
+	 * // 	aC: {
+	 * // 		c_d: 1,
+	 * // 		c_e: {
+	 * // 			eF: 1
+	 * // 		}
+	 * // 	}
+	 * // }
+	 */
+	readonly excludeChildren?: ReadonlyArray<string | RegExp>;
+
+	/**
 	Recurse nested objects and objects in arrays.
 
 	@default false
@@ -198,6 +230,24 @@ export type Options = {
 	```
 	*/
 	readonly stopPaths?: readonly string[];
+
+	/**
+	 * A list of matching keys that will be manually overridden with the provided value.
+	 * @default []
+	 * @example
+	 * ```
+	 * camelcaseKeys(
+	 * 	 {foo_bar: true, nested: {unicorn_rainbow: true}},
+	 * 	 {
+	 * 	   overrides: [
+	 * 		   ['foo_bar', 'foo_baz'],
+	 * 		 ]
+	 * 	 }
+	 * )
+	 *
+	 * //=> {'foo_baz': true, nested: {'unicorn_rainbow': true}}
+	 */
+	readonly overrides?: ReadonlyArray<[string | RegExp, string]>;
 };
 
 /**

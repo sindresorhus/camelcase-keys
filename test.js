@@ -15,6 +15,40 @@ test('exclude option', t => {
 	t.deepEqual(camelcaseKeys({'foo-bar': true}, {exclude: [/^f/]}), {'foo-bar': true});
 });
 
+test('excludeChildren option', t => {
+	t.deepEqual(
+		camelcaseKeys(
+			// eslint-disable-next-line camelcase
+			{a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1, g_h: 1, h_i: {j_k: 1}}}}
+			, {deep: true, excludeChildren: ['c_e']}),
+		// eslint-disable-next-line camelcase
+		{aB: 1, aC: {cD: 1, cE: {e_f: 1, g_h: 1, h_i: {jK: 1}}}},
+	);
+});
+
+test('overrides option', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: true, obj: {one_two: false, arr: [{three_four: true}]}}, {deep: true, overrides: [['foo_bar', 'foo_bar_override']]}),
+		// eslint-disable-next-line camelcase
+		{foo_bar_override: true, obj: {oneTwo: false, arr: [{threeFour: true}]}},
+	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: true, obj: {one_two: false, arr: [{nested_key: true}]}}, {deep: true, overrides: [['foo_bar', 'foo_bar_override'], ['nested_key', 'nested_key_override']]}),
+		// eslint-disable-next-line camelcase
+		{foo_bar_override: true, obj: {oneTwo: false, arr: [{nested_key_override: true}]}},
+	);
+
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({some_regex_match_key: true, obj: {one_two: false, arr: [{three_four: true}]}}, {deep: true, overrides: [[/regex_match/, 'regex_override']]}),
+		// eslint-disable-next-line camelcase
+		{regex_override: true, obj: {oneTwo: false, arr: [{threeFour: true}]}},
+	);
+});
+
 test('deep option', t => {
 	t.deepEqual(
 		// eslint-disable-next-line camelcase
