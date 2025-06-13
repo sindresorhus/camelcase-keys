@@ -54,6 +54,20 @@ Default: `[]`
 
 Exclude keys from being camel-cased.
 
+##### excludeChildren
+
+Type: `Array<string | RegExp>`\
+Default: `[]`
+
+Exclude children of given keys from being camel-cased.
+
+##### overrides
+
+Type: `Array<[string | RegExp, string]>`\
+Default: `[]`
+
+Override keys with a custom value. The first element of the tuple is the key to match, and the second element is the value to use instead.
+
 ##### deep
 
 Type: `boolean`\
@@ -139,7 +153,7 @@ camelcaseKeys(object, {
 	stopPaths: [
 		'a_c.c_e'
 	]
-}),
+})
 /*
 {
 	aB: 1,

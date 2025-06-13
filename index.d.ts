@@ -45,6 +45,8 @@ export type CamelCaseKeys<
 	PreserveConsecutiveUppercase extends boolean = false,
 	Exclude extends readonly unknown[] = EmptyTuple,
 	StopPaths extends readonly string[] = EmptyTuple,
+	ExcludeChildren extends readonly unknown[] = EmptyTuple,
+	Overrides extends ReadonlyArray<readonly [string | RegExp, string]> = EmptyTuple,
 	Path extends string = '',
 > = T extends ReadonlyArray<Record<string, unknown>>
 	// Handle arrays or tuples.
@@ -56,7 +58,9 @@ export type CamelCaseKeys<
 			IsPascalCase,
 			PreserveConsecutiveUppercase,
 			Exclude,
-			StopPaths
+			StopPaths,
+			ExcludeChildren,
+			Overrides
 			>
 			: T[P];
 	}
@@ -80,6 +84,8 @@ export type CamelCaseKeys<
 						PreserveConsecutiveUppercase,
 						Exclude,
 						StopPaths,
+						ExcludeChildren,
+						Overrides,
 						AppendPath<Path, P & string>
 						>
 						: T[P]
@@ -97,6 +103,38 @@ export type Options = {
 	@default []
 	*/
 	readonly exclude?: ReadonlyArray<string | RegExp>;
+
+	/**
+	 * Exclude children of the given keys from being camel-cased.
+	 * @default []
+	 * @example
+	 * ```
+	 * decamelizeKeys({
+	 * 		a_b: 1,
+	 *		a_c: {
+	 *			c_d: 1,
+	 *			c_e: {
+	 *				e_f: 1
+	 *			}
+	 *		}
+	 *	}, {
+	 *    deep: true,
+	 *    excludeChildren: [
+	 *    	'a_c'
+	 *    ]
+	 * })
+	 *
+	 * // {
+	 * // 	aB: 1,
+	 * // 	aC: {
+	 * // 		c_d: 1,
+	 * // 		c_e: {
+	 * // 			eF: 1
+	 * // 		}
+	 * // 	}
+	 * // }
+	 */
+	readonly excludeChildren?: ReadonlyArray<string | RegExp>;
 
 	/**
 	Recurse nested objects and objects in arrays.
@@ -198,6 +236,24 @@ export type Options = {
 	```
 	*/
 	readonly stopPaths?: readonly string[];
+
+	/**
+	 * A list of matching keys that will be manually overridden with the provided value.
+	 * @default []
+	 * @example
+	 * ```
+	 * camelcaseKeys(
+	 * 	 {foo_bar: true, nested: {unicorn_rainbow: true}},
+	 * 	 {
+	 * 	   overrides: [
+	 * 		   ['foo_bar', 'foo_baz'],
+	 * 		 ]
+	 * 	 }
+	 * )
+	 *
+	 * //=> {'foo_baz': true, nested: {'unicorn_rainbow': true}}
+	 */
+	readonly overrides?: ReadonlyArray<[string | RegExp, string]>;
 };
 
 /**
@@ -242,5 +298,7 @@ WithDefault<'deep' extends keyof OptionsType ? OptionsType['deep'] : undefined, 
 WithDefault<'pascalCase' extends keyof OptionsType ? OptionsType['pascalCase'] : undefined, false>,
 WithDefault<'preserveConsecutiveUppercase' extends keyof OptionsType ? OptionsType['preserveConsecutiveUppercase'] : undefined, false>,
 WithDefault<'exclude' extends keyof OptionsType ? OptionsType['exclude'] : undefined, EmptyTuple>,
-WithDefault<'stopPaths' extends keyof OptionsType ? OptionsType['stopPaths'] : undefined, EmptyTuple>
+WithDefault<'stopPaths' extends keyof OptionsType ? OptionsType['stopPaths'] : undefined, EmptyTuple>,
+WithDefault<'excludeChildren' extends keyof OptionsType ? OptionsType['excludeChildren'] : undefined, EmptyTuple>,
+WithDefault<'overrides' extends keyof OptionsType ? OptionsType['overrides'] : undefined, EmptyTuple>
 >;

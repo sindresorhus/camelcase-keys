@@ -29,10 +29,12 @@ const transform = (input, options = {}) => {
 
 	const {
 		exclude,
+		excludeChildren,
 		pascalCase = false,
 		stopPaths,
 		deep = false,
 		preserveConsecutiveUppercase = false,
+		overrides,
 	} = options;
 
 	const stopPathsSet = new Set(stopPaths);
@@ -46,20 +48,30 @@ const transform = (input, options = {}) => {
 			}
 		}
 
-		if (!(exclude && has(exclude, key))) {
-			const cacheKey = pascalCase ? `${key}_` : key;
+		if (
+			(excludeChildren && has(excludeChildren, parentPath?.split('.').pop()))
+			|| (exclude && has(exclude, key))
+		) {
+			return [key, value];
+		}
 
-			if (cache.has(cacheKey)) {
-				key = cache.get(cacheKey);
-			} else {
-				const returnValue = camelCase(key, {pascalCase, locale: false, preserveConsecutiveUppercase});
+		const overrideKey = overrides?.find(override => typeof override[0] === 'string' ? override[0] === key : override[0].test(key));
+		if (overrideKey) {
+			key = overrideKey ? overrideKey[1] : key;
+			return [key, value];
+		}
 
-				if (key.length < 100) { // Prevent abuse
-					cache.set(cacheKey, returnValue);
-				}
+		const cacheKey = pascalCase ? `${key}_` : key;
+		if (cache.has(cacheKey)) {
+			key = cache.get(cacheKey);
+		} else {
+			const returnValue = camelCase(key, {pascalCase, locale: false, preserveConsecutiveUppercase});
 
-				key = returnValue;
+			if (key.length < 100) { // Prevent abuse
+				cache.set(cacheKey, returnValue);
 			}
+
+			key = returnValue;
 		}
 
 		return [key, value];
