@@ -17,7 +17,7 @@
 	},
 	"sideEffects": false,
 	"engines": {
-		"node": ">=16"
+		"node": ">=20"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd",
@@ -55,24 +55,14 @@
 	],
 	"dependencies": {
 		"camelcase": "^8.0.0",
-		"map-obj": "5.0.0",
-		"quick-lru": "^6.1.1",
-		"type-fest": "^4.3.2"
+		"map-obj": "5.0.2",
+		"quick-lru": "^7.1.0",
+		"type-fest": "^4.41.0"
 	},
 	"devDependencies": {
-		"ava": "^5.3.1",
+		"ava": "^6.4.1",
 		"matcha": "^0.7.0",
-		"tsd": "^0.29.0",
-		"xo": "^0.56.0"
-	},
-	"xo": {
-		"overrides": [
-			{
-				"files": "bench/bench.js",
-				"rules": {
-					"import/no-unresolved": "off"
-				}
-			}
-		]
+		"tsd": "^0.33.0",
+		"xo": "^1.2.2"
 	}
 }

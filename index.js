@@ -17,10 +17,10 @@ const cache = new QuickLru({maxSize: 100_000});
 // Reproduces behavior from `map-obj`.
 const isObject = value =>
 	typeof value === 'object'
-		&& value !== null
-		&& !(value instanceof RegExp)
-		&& !(value instanceof Error)
-		&& !(value instanceof Date);
+	&& value !== null
+	&& !(value instanceof RegExp)
+	&& !(value instanceof Error)
+	&& !(value instanceof Date);
 
 const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 	if (!isObject(input)) {
@@ -42,8 +42,20 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 
 	const stopPathsSet = new Set(stopPaths);
 
+	// Handle arrays directly
+	if (Array.isArray(input)) {
+		const result = [];
+		isSeen.set(input, result);
+
+		for (const item of input) {
+			result.push(isObject(item) ? transform(item, options, isSeen, parentPath) : item);
+		}
+
+		return result;
+	}
+
 	// Pre-allocate the result object for circular reference handling
-	const result = Array.isArray(input) ? [] : {};
+	const result = {};
 	isSeen.set(input, result);
 
 	const makeMapper = currentParentPath => (key, value) => {
@@ -105,8 +117,7 @@ export default function camelcaseKeys(input, options) {
 		return input.map((item, index) =>
 			isObject(item)
 				? transform(item, options, isSeen, String(index))
-				: item,
-		);
+				: item);
 	}
 
 	return transform(input, options, isSeen);

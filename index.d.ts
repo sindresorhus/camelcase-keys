@@ -6,8 +6,7 @@ type ObjectLike = {[key: string]: any};
 
 // Helper to check if a key is in the exclude list
 type IsExcluded<K, Exclude extends readonly unknown[]> =
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	Exclude extends readonly []
+	Exclude extends readonly never[]
 		? false
 		: Exclude extends readonly [infer First, ...infer Rest]
 			? K extends First
@@ -17,8 +16,7 @@ type IsExcluded<K, Exclude extends readonly unknown[]> =
 
 // Helper to check if a path should stop transformation
 type IsStopPath<Path extends string, StopPaths extends readonly string[]> =
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	StopPaths extends readonly []
+	StopPaths extends readonly never[]
 		? false
 		: StopPaths extends readonly [infer First, ...infer Rest extends readonly string[]]
 			? Path extends First
@@ -40,10 +38,8 @@ export type CamelCaseKeys<
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	PreserveConsecutiveUppercase extends boolean = false,
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	Exclude extends readonly unknown[] = readonly [],
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	StopPaths extends readonly string[] = readonly [],
+	Exclude extends readonly unknown[] = readonly never[],
+	StopPaths extends readonly string[] = readonly never[],
 	Path extends string = '',
 > = T extends readonly any[]
 	? // Handle arrays
@@ -243,12 +239,10 @@ export default function camelcaseKeys<
 	input: T,
 	options?: O
 ): CamelCaseKeys<
-T,
-O['deep'] extends true ? true : false,
-O['pascalCase'] extends true ? true : false,
-O['preserveConsecutiveUppercase'] extends true ? true : false,
-// eslint-disable-next-line @typescript-eslint/ban-types
-O['exclude'] extends readonly unknown[] ? O['exclude'] : readonly [],
-// eslint-disable-next-line @typescript-eslint/ban-types
-O['stopPaths'] extends readonly string[] ? O['stopPaths'] : readonly []
+	T,
+	O['deep'] extends true ? true : false,
+	O['pascalCase'] extends true ? true : false,
+	O['preserveConsecutiveUppercase'] extends true ? true : false,
+	O['exclude'] extends readonly unknown[] ? O['exclude'] : readonly never[],
+	O['stopPaths'] extends readonly string[] ? O['stopPaths'] : readonly never[]
 >;
