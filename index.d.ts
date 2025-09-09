@@ -32,6 +32,8 @@ type AppendPath<Base extends string, Key extends string> =
 
 /**
 Convert keys of an object to camelcase strings.
+
+Note: Opaque types from `type-fest` may expose underlying primitive methods in the result type due to TypeScript's mapped type distribution. Runtime behavior is correct. Workaround: Use `result.key as OpaqueType` if needed.
 */
 export type CamelCaseKeys<
 	T extends ObjectLike | readonly unknown[],
