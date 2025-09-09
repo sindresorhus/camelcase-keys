@@ -1,43 +1,34 @@
 import type {CamelCase, PascalCase} from 'type-fest';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type EmptyTuple = [];
-
-// Allow union with, for example, `undefined` and `null`.
-type ObjectUnion = Record<string, unknown> | unknown;
-
-// A type that accepts both interfaces and type aliases
+// Type that accepts both interfaces and type aliases
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type ObjectLike = {[key: string]: any};
 
-/**
-Return a default type if input type is nil.
-
-@template T - Input type.
-@template U - Default type.
-*/
-type WithDefault<T, U> = T extends undefined | void | null ? U : T; // eslint-disable-line @typescript-eslint/ban-types
-
-// TODO: Replace this with https://github.com/sindresorhus/type-fest/blob/main/source/includes.d.ts
-/**
-Check if an element is included in a tuple.
-*/
-type IsInclude<List extends readonly unknown[], Target> = List extends undefined
-	? false
-	: List extends Readonly<EmptyTuple>
+// Helper to check if a key is in the exclude list
+type IsExcluded<K, Exclude extends readonly unknown[]> =
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	Exclude extends readonly []
 		? false
-		: List extends readonly [infer First, ...infer Rest]
-			? First extends Target
+		: Exclude extends readonly [infer First, ...infer Rest]
+			? K extends First
 				? true
-				: IsInclude<Rest, Target>
-			: boolean;
+				: IsExcluded<K, Rest>
+			: false;
 
-/**
-Append a segment to dot-notation path.
-*/
-type AppendPath<S extends string, Last extends string> = S extends ''
-	? Last
-	: `${S}.${Last}`;
+// Helper to check if a path should stop transformation
+type IsStopPath<Path extends string, StopPaths extends readonly string[]> =
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	StopPaths extends readonly []
+		? false
+		: StopPaths extends readonly [infer First, ...infer Rest extends readonly string[]]
+			? Path extends First
+				? true
+				: IsStopPath<Path, Rest>
+			: false;
+
+// Build dot-notation path
+type AppendPath<Base extends string, Key extends string> =
+	Base extends '' ? Key : `${Base}.${Key}`;
 
 /**
 Convert keys of an object to camelcase strings.
@@ -47,70 +38,59 @@ export type CamelCaseKeys<
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	PreserveConsecutiveUppercase extends boolean = false,
-	Exclude extends readonly unknown[] = EmptyTuple,
-	StopPaths extends readonly string[] = EmptyTuple,
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	Exclude extends readonly unknown[] = readonly [],
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	StopPaths extends readonly string[] = readonly [],
 	Path extends string = '',
-> = T extends ReadonlyArray<infer U>
-	// Handle arrays or tuples.
-	? {
-		[P in keyof T]: T[P] extends Record<string, unknown>
-			? CamelCaseKeys<
-			T[P],
-			Deep,
-			IsPascalCase,
-			PreserveConsecutiveUppercase,
-			Exclude,
-			StopPaths
-			>
-			: T[P] extends ReadonlyArray<Record<string, unknown>>
-				? CamelCaseKeys<
-				T[P],
-				Deep,
-				IsPascalCase,
-				PreserveConsecutiveUppercase,
-				Exclude,
-				StopPaths
-				>
-				: T[P] extends infer Union
-					? Union extends Record<string, unknown>
-						? CamelCaseKeys<
-						Union,
-						Deep,
-						IsPascalCase,
-						PreserveConsecutiveUppercase,
-						Exclude,
-						StopPaths
-						>
-						: Union
-					: T[P];
-	}
-	: T extends Record<string, unknown>
-		// Handle objects.
-		? {
-			[P in keyof T as [IsInclude<Exclude, P>] extends [true]
-				? P
-				: [IsPascalCase] extends [true]
-					? PascalCase<P>
-					: CamelCase<P, {preserveConsecutiveUppercase: PreserveConsecutiveUppercase}>]: [IsInclude<StopPaths, AppendPath<Path, P & string>>] extends [
-				true,
-			]
-				? T[P]
-				: [Deep] extends [true]
-					? T[P] extends ObjectUnion | ReadonlyArray<Record<string, unknown>>
-						? CamelCaseKeys<
-						T[P],
-						Deep,
-						IsPascalCase,
-						PreserveConsecutiveUppercase,
-						Exclude,
-						StopPaths,
-						AppendPath<Path, P & string>
-						>
-						: T[P]
-					: T[P];
+> = T extends readonly any[]
+	? // Handle arrays
+	{[K in keyof T]: ProcessArrayElement<T[K], Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>}
+	: T extends ObjectLike
+		? // Handle objects
+		{
+			[K in keyof T as IsExcluded<K, Exclude> extends true
+				? K
+				: IsPascalCase extends true
+					? PascalCase<K>
+					: CamelCase<K, {preserveConsecutiveUppercase: PreserveConsecutiveUppercase}>
+			]: ProcessValue<T[K], K & string, Path, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
 		}
-		// Return anything else as-is.
-		: T;
+		: T; // Return non-objects as-is
+
+// Process a value, checking if we should recurse
+type ProcessValue<
+	V,
+	K extends string,
+	Path extends string,
+	Deep extends boolean,
+	IsPascalCase extends boolean,
+	PreserveConsecutiveUppercase extends boolean,
+	Exclude extends readonly unknown[],
+	StopPaths extends readonly string[],
+> = IsStopPath<AppendPath<Path, K>, StopPaths> extends true
+	? V // Stop recursion at this path
+	: Deep extends true
+		? V extends ObjectLike | readonly any[]
+			? CamelCaseKeys<V, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths, AppendPath<Path, K>>
+			: V
+		: V;
+
+// Process array elements
+type ProcessArrayElement<
+	E,
+	Deep extends boolean,
+	IsPascalCase extends boolean,
+	PreserveConsecutiveUppercase extends boolean,
+	Exclude extends readonly unknown[],
+	StopPaths extends readonly string[],
+> = Deep extends true
+	? E extends ObjectLike | readonly any[]
+		? CamelCaseKeys<E, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
+		: E
+	: E extends ObjectLike
+		? CamelCaseKeys<E, false, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
+		: E;
 
 export type Options = {
 	/**
@@ -256,15 +236,17 @@ camelcaseKeys(commandLineArguments);
 */
 export default function camelcaseKeys<
 	T extends ObjectLike | readonly ObjectLike[],
-	OptionsType extends Options = Options,
+	O extends Options = Options,
 >(
 	input: T,
-	options?: OptionsType
+	options?: O
 ): CamelCaseKeys<
 T,
-WithDefault<'deep' extends keyof OptionsType ? OptionsType['deep'] : undefined, false>,
-WithDefault<'pascalCase' extends keyof OptionsType ? OptionsType['pascalCase'] : undefined, false>,
-WithDefault<'preserveConsecutiveUppercase' extends keyof OptionsType ? OptionsType['preserveConsecutiveUppercase'] : undefined, false>,
-WithDefault<'exclude' extends keyof OptionsType ? OptionsType['exclude'] : undefined, EmptyTuple>,
-WithDefault<'stopPaths' extends keyof OptionsType ? OptionsType['stopPaths'] : undefined, EmptyTuple>
+O['deep'] extends true ? true : false,
+O['pascalCase'] extends true ? true : false,
+O['preserveConsecutiveUppercase'] extends true ? true : false,
+// eslint-disable-next-line @typescript-eslint/ban-types
+O['exclude'] extends readonly unknown[] ? O['exclude'] : readonly [],
+// eslint-disable-next-line @typescript-eslint/ban-types
+O['stopPaths'] extends readonly string[] ? O['stopPaths'] : readonly []
 >;
