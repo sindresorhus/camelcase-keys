@@ -6,6 +6,10 @@ type EmptyTuple = [];
 // Allow union with, for example, `undefined` and `null`.
 type ObjectUnion = Record<string, unknown> | unknown;
 
+// A type that accepts both interfaces and type aliases
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+type ObjectLike = {[key: string]: any};
+
 /**
 Return a default type if input type is nil.
 
@@ -39,7 +43,7 @@ type AppendPath<S extends string, Last extends string> = S extends ''
 Convert keys of an object to camelcase strings.
 */
 export type CamelCaseKeys<
-	T extends ObjectUnion | ReadonlyArray<Record<string, unknown>>,
+	T extends ObjectLike | readonly unknown[],
 	Deep extends boolean = false,
 	IsPascalCase extends boolean = false,
 	PreserveConsecutiveUppercase extends boolean = false,
@@ -251,7 +255,7 @@ camelcaseKeys(commandLineArguments);
 ```
 */
 export default function camelcaseKeys<
-	T extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>,
+	T extends ObjectLike | readonly ObjectLike[],
 	OptionsType extends Options = Options,
 >(
 	input: T,

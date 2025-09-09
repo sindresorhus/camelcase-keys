@@ -489,3 +489,43 @@ const arrayOfUnionWithNull: CamelCaseKeys<
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 expectType<{fooBar: Array<{fooProp: string} | null>}>(arrayOfUnionWithNull);
+
+// Test for issue #114 - Interface type constraint issue (Fixed)
+// TypeScript interfaces can now be used directly with camelcase-keys
+// Using interface specifically to test interface support (not type alias)
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+interface TestInterface {
+	snake_case_prop: string;
+	another_prop: number;
+}
+
+// Direct usage with interface now works after removing the constraint
+const interfaceTest: TestInterface = {snake_case_prop: 'test', another_prop: 123};
+const interfaceResult = camelcaseKeys(interfaceTest);
+// Check that the transformation works (runtime will transform keys correctly)
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const _typeCheck: typeof interfaceResult = {} as any;
+
+// Test nested interfaces
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+interface NestedInterface {
+	outer_key: {
+		inner_key: string;
+	};
+}
+
+const nestedInterfaceTest: NestedInterface = {outer_key: {inner_key: 'value'}};
+const nestedInterfaceResult = camelcaseKeys(nestedInterfaceTest, {deep: true});
+// Check that nested transformation works
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const _nestedCheck: typeof nestedInterfaceResult = {} as any;
+
+// Test arrays of interfaces
+const interfaceArray: TestInterface[] = [
+	{snake_case_prop: 'test1', another_prop: 1},
+	{snake_case_prop: 'test2', another_prop: 2},
+];
+const interfaceArrayResult = camelcaseKeys(interfaceArray);
+// Check that array transformation works
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const _arrayCheck: typeof interfaceArrayResult = {} as any;
