@@ -125,6 +125,29 @@ test('handle array of non-objects with `deep` option', t => {
 	);
 });
 
+test('handle null and undefined inputs gracefully', t => {
+	// These should not throw errors and should return the input as-is
+	t.is(camelcaseKeys(null), null);
+	t.is(camelcaseKeys(undefined), undefined);
+	t.is(camelcaseKeys(123), 123);
+	t.is(camelcaseKeys('hello'), 'hello');
+	t.is(camelcaseKeys(true), true);
+	t.is(camelcaseKeys(false), false);
+
+	// With options
+	t.is(camelcaseKeys(null, {deep: true}), null);
+	t.is(camelcaseKeys(undefined, {deep: true}), undefined);
+	t.is(camelcaseKeys(123, {pascalCase: true}), 123);
+	t.is(camelcaseKeys('hello', {deep: true}), 'hello');
+
+	// Arrays with mixed null/undefined values
+	// eslint-disable-next-line camelcase
+	const mixedArray = [null, undefined, 'string', 123, true, {snake_case: 'value'}];
+	const expected = [null, undefined, 'string', 123, true, {snakeCase: 'value'}];
+	t.deepEqual(camelcaseKeys(mixedArray), expected);
+	t.deepEqual(camelcaseKeys(mixedArray, {deep: true}), expected);
+});
+
 test('use locale independent camel-case transformation', async t => {
 	const input = {'user-id': 123};
 	t.deepEqual(
