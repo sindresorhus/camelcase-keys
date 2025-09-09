@@ -47,6 +47,7 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 	isSeen.set(input, result);
 
 	const makeMapper = currentParentPath => (key, value) => {
+		// Handle deep transformation
 		if (deep && isObject(value)) {
 			const path = currentParentPath === undefined ? key : `${currentParentPath}.${key}`;
 
@@ -58,7 +59,9 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 			}
 		}
 
-		if (!(exclude && has(exclude, key))) {
+		// Skip transformation for excluded keys
+		// Only transform string keys (preserve symbols and numbers)
+		if (typeof key === 'string' && !(exclude && has(exclude, key))) {
 			const cacheKey = pascalCase ? `${key}_` : key;
 
 			if (cache.has(cacheKey)) {
@@ -66,7 +69,8 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 			} else {
 				const returnValue = camelCase(key, {pascalCase, locale: false, preserveConsecutiveUppercase});
 
-				if (key.length < 100) { // Prevent abuse
+				// Only cache reasonable length keys to prevent memory abuse
+				if (key.length < 100) {
 					cache.set(cacheKey, returnValue);
 				}
 
@@ -77,18 +81,32 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 		return [key, value];
 	};
 
-	const mappedResult = mapObject(input, makeMapper(parentPath));
+	const mappedResult = mapObject(input, makeMapper(parentPath), {deep: false});
 
 	// Copy properties to the pre-allocated result for circular reference handling
 	Object.assign(result, mappedResult);
+
+	// Preserve symbol keys (mapObject doesn't handle them)
+	const symbols = Object.getOwnPropertySymbols(input);
+	for (const symbol of symbols) {
+		result[symbol] = deep && isObject(input[symbol])
+			? transform(input[symbol], options, isSeen, parentPath)
+			: input[symbol];
+	}
 
 	return result;
 };
 
 export default function camelcaseKeys(input, options) {
 	const isSeen = new WeakMap();
+
 	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => transform(input[key], options, isSeen));
+		// More efficient array handling - directly map the array
+		return input.map((item, index) =>
+			isObject(item)
+				? transform(item, options, isSeen, String(index))
+				: item,
+		);
 	}
 
 	return transform(input, options, isSeen);
