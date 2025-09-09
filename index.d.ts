@@ -46,10 +46,10 @@ export type CamelCaseKeys<
 	Exclude extends readonly unknown[] = EmptyTuple,
 	StopPaths extends readonly string[] = EmptyTuple,
 	Path extends string = '',
-> = T extends ReadonlyArray<Record<string, unknown>>
+> = T extends ReadonlyArray<infer U>
 	// Handle arrays or tuples.
 	? {
-		[P in keyof T]: T[P] extends Record<string, unknown> | ReadonlyArray<Record<string, unknown>>
+		[P in keyof T]: T[P] extends Record<string, unknown>
 			? CamelCaseKeys<
 			T[P],
 			Deep,
@@ -58,7 +58,27 @@ export type CamelCaseKeys<
 			Exclude,
 			StopPaths
 			>
-			: T[P];
+			: T[P] extends ReadonlyArray<Record<string, unknown>>
+				? CamelCaseKeys<
+				T[P],
+				Deep,
+				IsPascalCase,
+				PreserveConsecutiveUppercase,
+				Exclude,
+				StopPaths
+				>
+				: T[P] extends infer Union
+					? Union extends Record<string, unknown>
+						? CamelCaseKeys<
+						Union,
+						Deep,
+						IsPascalCase,
+						PreserveConsecutiveUppercase,
+						Exclude,
+						StopPaths
+						>
+						: Union
+					: T[P];
 	}
 	: T extends Record<string, unknown>
 		// Handle objects.

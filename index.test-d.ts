@@ -466,3 +466,26 @@ const nullCamelcased: CamelCaseKeys<{foo_bar: {foo_prop: string} | null}, true>
 expectType<{fooBar: {fooProp: string} | null}>(objectCamelcased);
 // eslint-disable-next-line @typescript-eslint/ban-types
 expectType<{fooBar: {fooProp: string} | null}>(nullCamelcased);
+
+// Test for union type in arrays (Issue #130)
+const arrayOfUnionType: CamelCaseKeys<
+	{
+		foo_bar: Array<{foo_prop: string} | undefined>;
+	},
+	true
+> = camelcaseKeys({foo_bar: [{foo_prop: 'foo_prop'}]}, {deep: true});
+
+// This should work without TypeScript errors
+expectType<{fooBar: Array<{fooProp: string} | undefined>}>(arrayOfUnionType);
+
+// Test with null union (similar to original issue but following project style)
+const arrayOfUnionWithNull: CamelCaseKeys<
+	{
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		foo_bar: Array<{foo_prop: string} | null>;
+	},
+	true
+> = camelcaseKeys({foo_bar: [{foo_prop: 'foo_prop'}]}, {deep: true});
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+expectType<{fooBar: Array<{fooProp: string} | null>}>(arrayOfUnionWithNull);
