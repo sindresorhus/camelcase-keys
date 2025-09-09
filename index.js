@@ -22,9 +22,14 @@ const isObject = value =>
 		&& !(value instanceof Error)
 		&& !(value instanceof Date);
 
-const transform = (input, options = {}) => {
+const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 	if (!isObject(input)) {
 		return input;
+	}
+
+	// Check for circular references
+	if (isSeen.has(input)) {
+		return isSeen.get(input);
 	}
 
 	const {
@@ -37,12 +42,19 @@ const transform = (input, options = {}) => {
 
 	const stopPathsSet = new Set(stopPaths);
 
-	const makeMapper = parentPath => (key, value) => {
+	// Pre-allocate the result object for circular reference handling
+	const result = Array.isArray(input) ? [] : {};
+	isSeen.set(input, result);
+
+	const makeMapper = currentParentPath => (key, value) => {
 		if (deep && isObject(value)) {
-			const path = parentPath === undefined ? key : `${parentPath}.${key}`;
+			const path = currentParentPath === undefined ? key : `${currentParentPath}.${key}`;
 
 			if (!stopPathsSet.has(path)) {
-				value = mapObject(value, makeMapper(path));
+				// Handle arrays and objects recursively
+				value = Array.isArray(value)
+					? value.map(item => isObject(item) ? transform(item, options, isSeen, path) : item)
+					: transform(value, options, isSeen, path);
 			}
 		}
 
@@ -65,13 +77,19 @@ const transform = (input, options = {}) => {
 		return [key, value];
 	};
 
-	return mapObject(input, makeMapper(undefined));
+	const mappedResult = mapObject(input, makeMapper(parentPath));
+
+	// Copy properties to the pre-allocated result for circular reference handling
+	Object.assign(result, mappedResult);
+
+	return result;
 };
 
 export default function camelcaseKeys(input, options) {
+	const isSeen = new WeakMap();
 	if (Array.isArray(input)) {
-		return Object.keys(input).map(key => transform(input[key], options));
+		return Object.keys(input).map(key => transform(input[key], options, isSeen));
 	}
 
-	return transform(input, options);
+	return transform(input, options, isSeen);
 }

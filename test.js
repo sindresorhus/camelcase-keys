@@ -148,6 +148,69 @@ test('handle null and undefined inputs gracefully', t => {
 	t.deepEqual(camelcaseKeys(mixedArray, {deep: true}), expected);
 });
 
+test('handle circular references', t => {
+	// Simple self-reference
+	const simple = {};
+	simple.self = simple;
+
+	const simpleResult = camelcaseKeys(simple, {deep: true});
+	t.is(simpleResult.self, simpleResult);
+
+	// With key transformation
+	// eslint-disable-next-line camelcase
+	const withSnakeCase = {some_key: 'value'};
+	// eslint-disable-next-line camelcase
+	withSnakeCase.self_ref = withSnakeCase;
+
+	const snakeResult = camelcaseKeys(withSnakeCase, {deep: true});
+	t.is(snakeResult.someKey, 'value');
+	t.is(snakeResult.selfRef, snakeResult);
+
+	// Nested circular reference
+	// eslint-disable-next-line camelcase
+	const nested = {outer_key: {inner_key: 'value'}};
+	// eslint-disable-next-line camelcase
+	nested.outer_key.back_ref = nested;
+
+	const nestedResult = camelcaseKeys(nested, {deep: true});
+	t.is(nestedResult.outerKey.innerKey, 'value');
+	t.is(nestedResult.outerKey.backRef, nestedResult);
+
+	// Multiple circular references
+	const object1 = {name: 'object1'};
+	const object2 = {name: 'object2'};
+	// eslint-disable-next-line camelcase
+	object1.other_obj = object2;
+	// eslint-disable-next-line camelcase
+	object2.other_obj = object1;
+	// eslint-disable-next-line camelcase
+	object1.self_ref = object1;
+
+	const multiResult1 = camelcaseKeys(object1, {deep: true});
+	const multiResult2 = multiResult1.otherObj;
+	t.is(multiResult1.name, 'object1');
+	t.is(multiResult2.name, 'object2');
+	t.is(multiResult1.selfRef, multiResult1);
+	t.is(multiResult2.otherObj, multiResult1);
+
+	// Circular reference in array
+	// eslint-disable-next-line camelcase
+	const arrayCircular = {some_items: []};
+	arrayCircular.some_items.push(arrayCircular);
+
+	const arrayResult = camelcaseKeys(arrayCircular, {deep: true});
+	t.is(arrayResult.someItems[0], arrayResult);
+
+	// Without deep option should not cause issues
+	const shallowCircular = {};
+	shallowCircular.self = shallowCircular;
+
+	t.notThrows(() => {
+		const result = camelcaseKeys(shallowCircular, {deep: false});
+		t.is(result.self, shallowCircular); // Points to original, not transformed
+	});
+});
+
 test('use locale independent camel-case transformation', async t => {
 	const input = {'user-id': 123};
 	t.deepEqual(
