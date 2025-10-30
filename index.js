@@ -14,13 +14,23 @@ const has = (array, key) => array.some(element => {
 
 const cache = new QuickLru({maxSize: 100_000});
 
+const isBuiltIn = value =>
+	ArrayBuffer.isView(value)
+	// Check for known built-in types
+	|| value instanceof Date
+	|| value instanceof RegExp
+	|| value instanceof Error
+	|| value instanceof Map
+	|| value instanceof Set
+	|| value instanceof WeakMap
+	|| value instanceof WeakSet
+	|| value instanceof Promise;
+
 // Reproduces behavior from `map-obj`.
 const isObject = value =>
 	typeof value === 'object'
 	&& value !== null
-	&& !(value instanceof RegExp)
-	&& !(value instanceof Error)
-	&& !(value instanceof Date);
+	&& !isBuiltIn(value);
 
 const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 	if (!isObject(input)) {

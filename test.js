@@ -222,6 +222,33 @@ test('use locale independent camel-case transformation', async t => {
 	);
 });
 
+test('do not deep convert built-in types', t => {
+	const date = new Date('2024-01-01');
+	const regex = /test/;
+	const typedArray = new Uint8Array([1, 2, 3]);
+
+	// eslint-disable-next-line camelcase
+	const result = camelcaseKeys({foo_date: date, foo_regex: regex, foo_buffer: typedArray}, {deep: true});
+
+	t.is(result.fooDate, date);
+	t.is(result.fooRegex, regex);
+	t.is(result.fooBuffer, typedArray);
+});
+
+test('deep convert custom class instances', t => {
+	class CustomClass {
+		constructor() {
+			// eslint-disable-next-line camelcase
+			this.foo_bar = 'value';
+		}
+	}
+
+	// eslint-disable-next-line camelcase
+	const result = camelcaseKeys({my_obj: new CustomClass()}, {deep: true});
+
+	t.is(result.myObj.fooBar, 'value');
+});
+
 /**
 Executes the library with the given arguments and resolves with the parsed result.
 
