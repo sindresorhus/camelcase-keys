@@ -52,6 +52,93 @@ test('stopPaths option', t => {
 	);
 });
 
+test('stopPaths works with arrays', t => {
+	// Issue #65: stopPaths should work across array boundaries
+	t.deepEqual(
+		camelcaseKeys({
+			foo: [
+				{
+					bar: {
+						// eslint-disable-next-line camelcase
+						baz_qux: 'value',
+					},
+				},
+			],
+		}, {deep: true, stopPaths: ['foo.bar']}),
+		{
+			foo: [
+				{
+					bar: {
+						// eslint-disable-next-line camelcase
+						baz_qux: 'value',
+					},
+				},
+			],
+		},
+	);
+
+	// StopPaths applies to all items in the array
+	t.deepEqual(
+		camelcaseKeys({
+			// eslint-disable-next-line camelcase
+			my_items: [
+				// eslint-disable-next-line camelcase
+				{nested_obj: {deep_value: 1}},
+				// eslint-disable-next-line camelcase
+				{nested_obj: {deep_value: 2}},
+			],
+		}, {deep: true, stopPaths: ['my_items.nested_obj']}),
+		{
+			myItems: [
+				// eslint-disable-next-line camelcase
+				{nestedObj: {deep_value: 1}},
+				// eslint-disable-next-line camelcase
+				{nestedObj: {deep_value: 2}},
+			],
+		},
+	);
+
+	// Top-level arrays work consistently with nested arrays
+	t.deepEqual(
+		camelcaseKeys([
+			{
+				// eslint-disable-next-line camelcase
+				user_name: 'john',
+				// eslint-disable-next-line camelcase
+				user_meta: {
+					// eslint-disable-next-line camelcase
+					created_at: '2023',
+				},
+			},
+			{
+				// eslint-disable-next-line camelcase
+				user_name: 'jane',
+				// eslint-disable-next-line camelcase
+				user_meta: {
+					// eslint-disable-next-line camelcase
+					created_at: '2024',
+				},
+			},
+		], {deep: true, stopPaths: ['user_meta']}),
+		[
+			{
+				userName: 'john',
+				userMeta: {
+					// eslint-disable-next-line camelcase
+					created_at: '2023',
+				},
+			},
+			{
+				userName: 'jane',
+				userMeta: {
+					// eslint-disable-next-line camelcase
+					created_at: '2024',
+				},
+			},
+		],
+	);
+});
+
 test('preserveConsecutiveUppercase option only', t => {
 	// eslint-disable-next-line camelcase
 	t.true(camelcaseKeys({new_foo_BAR: true}, {preserveConsecutiveUppercase: true}).newFooBAR);

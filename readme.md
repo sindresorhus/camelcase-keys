@@ -153,6 +153,40 @@ camelcaseKeys(object, {
 */
 ```
 
+When an object is inside an array, the path is specified without array indices. A `stopPath` will apply to all items in the array.
+
+```js
+import camelcaseKeys from 'camelcase-keys';
+
+const object = {
+	foo: [
+		{
+			bar: {
+				baz_qux: 'value'
+			}
+		}
+	]
+};
+
+camelcaseKeys(object, {
+	deep: true,
+	stopPaths: [
+		'foo.bar'
+	]
+}),
+/*
+{
+	foo: [
+		{
+			bar: {
+				baz_qux: 'value'
+			}
+		}
+	]
+}
+*/
+```
+
 ## Related
 
 - [decamelize-keys](https://github.com/sindresorhus/decamelize-keys) - The inverse of this package

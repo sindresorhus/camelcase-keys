@@ -124,9 +124,9 @@ export default function camelcaseKeys(input, options) {
 
 	if (Array.isArray(input)) {
 		// More efficient array handling - directly map the array
-		return input.map((item, index) =>
+		return input.map(item =>
 			isObject(item)
-				? transform(item, options, isSeen, String(index))
+				? transform(item, options, isSeen, undefined)
 				: item);
 	}
 
