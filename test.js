@@ -336,6 +336,48 @@ test('deep convert custom class instances', t => {
 	t.is(result.myObj.fooBar, 'value');
 });
 
+test('preserve numeric string keys', t => {
+	// Float strings should be preserved (issue #68)
+	// eslint-disable-next-line @stylistic/quote-props
+	t.deepEqual(camelcaseKeys({'4.2': 'foo'}), {'4.2': 'foo'});
+
+	// Integer strings should be preserved
+	// eslint-disable-next-line @stylistic/quote-props
+	t.deepEqual(camelcaseKeys({'42': 'foo'}), {'42': 'foo'});
+
+	// Negative numbers should be preserved
+	t.deepEqual(
+		camelcaseKeys({'-42': 'foo', '-4.2': 'bar'}),
+		{'-42': 'foo', '-4.2': 'bar'},
+	);
+
+	// Scientific notation should be preserved
+	t.deepEqual(
+		camelcaseKeys({'1e5': 'foo'}),
+		{'1e5': 'foo'},
+	);
+
+	// Special numeric values should be preserved
+	t.deepEqual(
+		camelcaseKeys({Infinity: 'foo'}),
+		{Infinity: 'foo'},
+	);
+
+	// Keys starting with numbers but containing non-numeric characters should be transformed
+	t.deepEqual(
+		camelcaseKeys({'42-foo': 'value'}),
+		{'42Foo': 'value'},
+	);
+
+	// With deep option
+	// eslint-disable-next-line camelcase, @stylistic/quote-props
+	t.deepEqual(camelcaseKeys({foo_bar: {'4.2': 'nested'}}, {deep: true}), {fooBar: {'4.2': 'nested'}});
+
+	// In arrays
+	// eslint-disable-next-line @stylistic/quote-props
+	t.deepEqual(camelcaseKeys([{'4.2': 'foo'}, {42: 'bar'}]), [{'4.2': 'foo'}, {42: 'bar'}]);
+});
+
 /**
 Executes the library with the given arguments and resolves with the parsed result.
 

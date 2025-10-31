@@ -424,3 +424,21 @@ const interfaceArrayResult = camelcaseKeys(interfaceArray);
 // Check that array transformation works
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const _arrayCheck: typeof interfaceArrayResult = {} as any;
+
+// Test numeric string keys are preserved (issue #68)
+// eslint-disable-next-line @stylistic/quote-props
+expectType<{'4.2': string}>(camelcaseKeys({'4.2': 'foo'}));
+expectType<{42: string}>(camelcaseKeys({42: 'foo'}));
+// eslint-disable-next-line @stylistic/quote-props
+expectType<{'42': string}>(camelcaseKeys({'42': 'foo'}));
+
+// Numeric keys should be preserved with deep option
+// eslint-disable-next-line @stylistic/quote-props
+expectType<{fooBar: {'4.2': string}}>(camelcaseKeys({foo_bar: {'4.2': 'nested'}}, {deep: true}));
+
+// Numeric keys in arrays
+// eslint-disable-next-line @stylistic/quote-props
+expectType<Array<{'4.2': string}>>(camelcaseKeys([{'4.2': 'foo'}]));
+
+// Non-numeric keys starting with numbers should still be transformed
+expectType<{'42Foo': string}>(camelcaseKeys({'42-foo': 'value'}));

@@ -12,6 +12,10 @@ const has = (array, key) => array.some(element => {
 	return element.test(key);
 });
 
+// Preserve numeric keys. The trim check excludes empty/whitespace strings,
+// which Number() would incorrectly convert to 0.
+const isNumericKey = key => key.trim() !== '' && !Number.isNaN(Number(key));
+
 const cache = new QuickLru({maxSize: 100_000});
 
 const isBuiltIn = value =>
@@ -81,9 +85,9 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 			}
 		}
 
-		// Skip transformation for excluded keys
+		// Skip transformation for excluded keys, numeric keys
 		// Only transform string keys (preserve symbols and numbers)
-		if (typeof key === 'string' && !(exclude && has(exclude, key))) {
+		if (typeof key === 'string' && !isNumericKey(key) && !(exclude && has(exclude, key))) {
 			const cacheKey = pascalCase ? `${key}_` : key;
 
 			if (cache.has(cacheKey)) {
