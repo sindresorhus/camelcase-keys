@@ -64,5 +64,10 @@
 		"matcha": "^0.7.0",
 		"tsd": "^0.33.0",
 		"xo": "^1.2.2"
+	},
+	"xo": {
+		"rules": {
+			"@typescript-eslint/unified-signatures": "off"
+		}
 	}
 }

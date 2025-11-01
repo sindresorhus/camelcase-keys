@@ -94,9 +94,9 @@ export type Options = {
 	/**
 	Exclude keys from being camel-cased.
 
-	If this option can be statically determined, it's recommended to add `as const` to it.
-
 	@default []
+
+	For correct TypeScript types when using this option with a string array, add `as const` to the array.
 	*/
 	readonly exclude?: ReadonlyArray<string | RegExp>;
 
@@ -164,9 +164,9 @@ export type Options = {
 	/**
 	Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
-	If this option can be statically determined, it's recommended to add `as const` to it.
-
 	@default []
+
+	For correct TypeScript types when using this option, add `as const` to the array.
 
 	@example
 	```

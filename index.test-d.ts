@@ -442,3 +442,92 @@ expectType<Array<{'4.2': string}>>(camelcaseKeys([{'4.2': 'foo'}]));
 
 // Non-numeric keys starting with numbers should still be transformed
 expectType<{'42Foo': string}>(camelcaseKeys({'42-foo': 'value'}));
+
+// Test for issue #83 - exclude without `as const`
+type Language = {
+	iso_639_1: string;
+	name: string;
+};
+
+type Image = {
+	aspect_ratio: number;
+	file_path: string;
+	height: number;
+	iso_639_1: string | undefined;
+	vote_average: number;
+	vote_count: number;
+	width: number;
+};
+
+type MovieDetails = {
+	id: number;
+	spoken_languages: Language[];
+	images: Image[];
+};
+
+const movieData: MovieDetails = {
+	id: 1,
+	spoken_languages: [
+		{iso_639_1: 'en', name: 'English'},
+	],
+	images: [
+		{
+			aspect_ratio: 1.5,
+			file_path: '/path.jpg',
+			height: 100,
+			iso_639_1: 'en',
+			vote_average: 5,
+			vote_count: 10,
+			width: 150,
+		},
+	],
+};
+
+// WITHOUT `as const` - the problematic case
+const result1 = camelcaseKeys(movieData, {
+	exclude: ['iso_639_1', 'iso_3166_1'],
+	deep: true,
+});
+
+// Since exclude is string[], TypeScript can't properly exclude specific keys
+// It will convert everything to camelCase
+expectType<{
+	id: number;
+	spokenLanguages: Array<{
+		iso6391: string; // Bug: should be iso_639_1 but TypeScript doesn't know
+		name: string;
+	}>;
+	images: Array<{
+		aspectRatio: number;
+		filePath: string;
+		height: number;
+		iso6391: string | undefined; // Bug: should be iso_639_1 but TypeScript doesn't know
+		voteAverage: number;
+		voteCount: number;
+		width: number;
+	}>;
+}>(result1);
+
+// WITH `as const` - this works correctly
+const result2 = camelcaseKeys(movieData, {
+	exclude: ['iso_639_1', 'iso_3166_1'] as const,
+	deep: true,
+});
+
+// With as const, TypeScript knows the exact strings in the exclude array
+expectType<{
+	id: number;
+	spokenLanguages: Array<{
+		iso_639_1: string; // Correctly preserved
+		name: string;
+	}>;
+	images: Array<{
+		aspectRatio: number;
+		filePath: string;
+		height: number;
+		iso_639_1: string | undefined; // Correctly preserved
+		voteAverage: number;
+		voteCount: number;
+		width: number;
+	}>;
+}>(result2);
