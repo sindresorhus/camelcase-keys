@@ -531,3 +531,40 @@ expectType<{
 		width: number;
 	}>;
 }>(result2);
+
+// Test for leading underscore and dollar sign preservation
+expectType<{_fooBar: boolean}>(camelcaseKeys({_foo_bar: true}));
+expectType<{$fooBar: boolean}>(camelcaseKeys({$foo_bar: true}));
+expectType<{__fooBar: boolean}>(camelcaseKeys({__foo_bar: true}));
+expectType<{$$fooBar: boolean}>(camelcaseKeys({$$foo_bar: true}));
+expectType<{$_fooBar: boolean}>(camelcaseKeys({$_foo_bar: true}));
+expectType<{_$fooBar: boolean}>(camelcaseKeys({_$foo_bar: true}));
+
+// With pascalCase
+expectType<{_FooBar: boolean}>(camelcaseKeys({_foo_bar: true}, {pascalCase: true}));
+expectType<{$FooBar: boolean}>(camelcaseKeys({$foo_bar: true}, {pascalCase: true}));
+
+// With deep option
+expectType<{readonly _outer: {readonly $inner: true}}>(camelcaseKeys({_outer: {$inner: true}} as const, {deep: true}));
+
+// Edge cases: keys that are only prefix characters
+expectType<{readonly _: true}>(camelcaseKeys({_: true} as const));
+expectType<{readonly __: true}>(camelcaseKeys({__: true} as const));
+expectType<{readonly $: true}>(camelcaseKeys({$: true} as const));
+expectType<{readonly $$$: true}>(camelcaseKeys({$$$: true} as const));
+
+// Test number handling
+// NOTE: Using splitOnNumbers: false fixes a1b_text but breaks foo2bar
+// Runtime (camelcase):     a1b_text → a1bText ✓, foo2bar → foo2Bar
+// Types (splitOn: false):  a1b_text → a1bText ✓, foo2bar → foo2bar ✗
+// We prioritize keys with underscores as they're more common
+// See https://github.com/sindresorhus/camelcase-keys/issues/124
+expectType<{a1bText: string}>(camelcaseKeys({a1b_text: ''}));
+// Known limitation: foo2bar (no underscores) types don't match runtime
+// expectType<{foo2Bar: boolean}>(camelcaseKeys({foo2bar: true}));
+expectType<{readonly version2: true}>(camelcaseKeys({version2: true} as const));
+expectType<{version10Foo: boolean}>(camelcaseKeys({version10_foo: true}));
+
+// With pascalCase
+expectType<{A1bText: string}>(camelcaseKeys({a1b_text: ''}, {pascalCase: true}));
+// ExpectType<{Foo2Bar: boolean}>(camelcaseKeys({foo2bar: true}, {pascalCase: true}));

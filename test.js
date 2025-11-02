@@ -436,6 +436,26 @@ test('preserve leading underscores and dollar signs', t => {
 	t.deepEqual(camelcaseKeys({$foo_BAR: true}, {preserveConsecutiveUppercase: true}), {$fooBAR: true});
 });
 
+test('number handling in keys', t => {
+	// Numbers create word boundaries when directly followed by letters
+	t.deepEqual(camelcaseKeys({foo2bar: true}), {foo2Bar: true});
+	t.deepEqual(camelcaseKeys({a1b: true}), {a1B: true});
+
+	// But not when there's an underscore separator after the number
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({a1b_text: ''}), {a1bText: ''});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({foo2_bar: true}), {foo2Bar: true});
+
+	// Numbers alone don't get transformed
+	t.deepEqual(camelcaseKeys({version2: true}), {version2: true});
+
+	// With pascalCase
+	t.deepEqual(camelcaseKeys({foo2bar: true}, {pascalCase: true}), {Foo2Bar: true});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({a1b_text: ''}, {pascalCase: true}), {A1bText: ''});
+});
+
 /**
 Executes the library with the given arguments and resolves with the parsed result.
 

@@ -55,15 +55,15 @@
 	],
 	"dependencies": {
 		"camelcase": "^8.0.0",
-		"map-obj": "5.0.2",
-		"quick-lru": "^7.1.0",
-		"type-fest": "^4.41.0"
+		"map-obj": "6.0.0",
+		"quick-lru": "^7.3.0",
+		"type-fest": "^5.2.0"
 	},
 	"devDependencies": {
 		"ava": "^6.4.1",
 		"matcha": "^0.7.0",
 		"tsd": "^0.33.0",
-		"xo": "^1.2.2"
+		"xo": "^1.2.3"
 	},
 	"xo": {
 		"rules": {

@@ -4,29 +4,27 @@ import type {CamelCase, PascalCase} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type ObjectLike = {[key: string]: any};
 
-// Helper to check if a key is in the exclude list
 type IsExcluded<K, Exclude extends readonly unknown[]> =
-	Exclude extends readonly never[]
-		? false
-		: Exclude extends readonly [infer First, ...infer Rest]
-			? K extends First
-				? true
-				: IsExcluded<K, Rest>
-			: false;
+	Exclude extends readonly [infer First, ...infer Rest]
+		? K extends First ? true : IsExcluded<K, Rest>
+		: false;
 
-// Helper to check if a path should stop transformation
 type IsStopPath<Path extends string, StopPaths extends readonly string[]> =
-	StopPaths extends readonly never[]
-		? false
-		: StopPaths extends readonly [infer First, ...infer Rest extends readonly string[]]
-			? Path extends First
-				? true
-				: IsStopPath<Path, Rest>
-			: false;
+	StopPaths extends readonly [infer First, ...infer Rest extends readonly string[]]
+		? Path extends First ? true : IsStopPath<Path, Rest>
+		: false;
 
-// Build dot-notation path
-type AppendPath<Base extends string, Key extends string> =
-	Base extends '' ? Key : `${Base}.${Key}`;
+type AppendPath<Base extends string, Key extends string> = Base extends '' ? Key : `${Base}.${Key}`;
+
+type ApplyCase<K extends string, Pascal extends boolean, Preserve extends boolean> =
+	Pascal extends true
+		? PascalCase<K, {preserveConsecutiveUppercase: Preserve; splitOnNumbers: false}>
+		: CamelCase<K, {preserveConsecutiveUppercase: Preserve; splitOnNumbers: false}>;
+
+type TransformKey<K, Pascal extends boolean, Preserve extends boolean> =
+	K extends `${infer Char extends '_' | '$'}${infer Rest}`
+		? `${Char}${TransformKey<Rest, Pascal, Preserve>}`
+		: K extends string ? ApplyCase<K, Pascal, Preserve> : K;
 
 /**
 Convert keys of an object to camelcase strings.
@@ -49,10 +47,8 @@ export type CamelCaseKeys<
 		{
 			[K in keyof T as IsExcluded<K, Exclude> extends true
 				? K
-				: IsPascalCase extends true
-					? PascalCase<K>
-					: CamelCase<K, {preserveConsecutiveUppercase: PreserveConsecutiveUppercase}>
-			]: ProcessValue<T[K], K & string, Path, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
+				: TransformKey<K, IsPascalCase, PreserveConsecutiveUppercase>
+			]: ProcessValue<T[K], K & string, Path, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>;
 		}
 		: T; // Return non-objects as-is
 
