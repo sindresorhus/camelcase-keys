@@ -33,6 +33,13 @@ camelcaseKeys(commandLineArguments);
 //=> {_: [], fooBar: true}
 ```
 
+Leading `_` and `$` are preserved as they have semantic meaning.
+
+```js
+camelcaseKeys({_foo_bar: true, $baz_qux: true});
+//=> {_fooBar: true, $bazQux: true}
+```
+
 ## API
 
 ### camelcaseKeys(input, options?)

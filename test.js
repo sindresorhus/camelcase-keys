@@ -378,6 +378,64 @@ test('preserve numeric string keys', t => {
 	t.deepEqual(camelcaseKeys([{'4.2': 'foo'}, {42: 'bar'}]), [{'4.2': 'foo'}, {42: 'bar'}]);
 });
 
+test('preserve leading underscores and dollar signs', t => {
+	// Single leading underscore
+	t.deepEqual(camelcaseKeys({_name: true}), {_name: true});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({_name_obj: 'value'}), {_nameObj: 'value'});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({_foo_bar: true}), {_fooBar: true});
+
+	// Single leading dollar sign
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({$foo_bar: true}), {$fooBar: true});
+	t.deepEqual(camelcaseKeys({$element: true}), {$element: true});
+
+	// Multiple leading underscores
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({__foo_bar: 'value'}), {__fooBar: 'value'});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({___foo_bar: 'value'}), {___fooBar: 'value'});
+
+	// Multiple leading dollar signs
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({$$foo_bar: 'value'}), {$$fooBar: 'value'});
+
+	// Mixed leading characters
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({$_foo_bar: 'value'}), {$_fooBar: 'value'});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({_$foo_bar: 'value'}), {_$fooBar: 'value'});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({__$foo_bar: 'value'}), {__$fooBar: 'value'});
+
+	// With pascalCase option
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({_foo_bar: true}, {pascalCase: true}), {_FooBar: true});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({$foo_bar: true}, {pascalCase: true}), {$FooBar: true});
+
+	// With deep option
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({_outer_key: {$inner_key: 'value'}}, {deep: true}),
+		{_outerKey: {$innerKey: 'value'}},
+	);
+
+	// In arrays
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys([{_foo_bar: true}, {$bar_foo: false}]),
+		[{_fooBar: true}, {$barFoo: false}],
+	);
+
+	// With preserveConsecutiveUppercase option
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({_foo_BAR: true}, {preserveConsecutiveUppercase: true}), {_fooBAR: true});
+	// eslint-disable-next-line camelcase
+	t.deepEqual(camelcaseKeys({$foo_BAR: true}, {preserveConsecutiveUppercase: true}), {$fooBAR: true});
+});
+
 /**
 Executes the library with the given arguments and resolves with the parsed result.
 
