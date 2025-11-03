@@ -54,10 +54,10 @@
 		"recursive"
 	],
 	"dependencies": {
-		"camelcase": "^8.0.0",
+		"camelcase": "^9.0.0",
 		"map-obj": "6.0.0",
 		"quick-lru": "^7.3.0",
-		"type-fest": "^5.2.0"
+		"type-fest": "^5.4.1"
 	},
 	"devDependencies": {
 		"ava": "^6.4.1",

@@ -93,11 +93,7 @@ const transform = (input, options = {}, isSeen = new WeakMap(), parentPath) => {
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
 			} else {
-				// Preserve leading `_` and `$` as they typically have semantic meaning
-				// This should eventually be fixed in the `camelcase` package itself
-				const leadingPrefix = key.match(/^[_$]*/)[0];
-				const transformed = camelCase(key.slice(leadingPrefix.length), {pascalCase, locale: false, preserveConsecutiveUppercase});
-				key = leadingPrefix + transformed;
+				key = camelCase(key, {pascalCase, locale: false, preserveConsecutiveUppercase});
 
 				// Only cache reasonable length keys to prevent memory abuse
 				if (key.length < 100) {
