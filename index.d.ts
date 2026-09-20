@@ -41,7 +41,7 @@ export type CamelCaseKeys<
 	Path extends string = '',
 > = T extends readonly any[]
 	? // Handle arrays
-	{[K in keyof T]: ProcessArrayElement<T[K], Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>}
+	{[K in keyof T]: ProcessArrayElement<T[K], Path, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>}
 	: T extends ObjectLike
 		? // Handle objects
 		{
@@ -65,26 +65,24 @@ type ProcessValue<
 > = IsStopPath<AppendPath<Path, K>, StopPaths> extends true
 	? V // Stop recursion at this path
 	: Deep extends true
-		? V extends ObjectLike | readonly any[]
+		? V extends ObjectLike
 			? CamelCaseKeys<V, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths, AppendPath<Path, K>>
 			: V
 		: V;
 
-// Process array elements
+// Process array elements. The parent path is kept, so that stop paths do not include array indices.
+// Arrays match `ObjectLike`, so nested arrays also recurse.
 type ProcessArrayElement<
 	E,
+	Path extends string,
 	Deep extends boolean,
 	IsPascalCase extends boolean,
 	PreserveConsecutiveUppercase extends boolean,
 	Exclude extends readonly unknown[],
 	StopPaths extends readonly string[],
-> = Deep extends true
-	? E extends ObjectLike | readonly any[]
-		? CamelCaseKeys<E, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
-		: E
-	: E extends ObjectLike
-		? CamelCaseKeys<E, false, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths>
-		: E;
+> = E extends ObjectLike
+	? CamelCaseKeys<E, Deep, IsPascalCase, PreserveConsecutiveUppercase, Exclude, StopPaths, Path>
+	: E;
 
 export type Options = {
 	/**
@@ -158,7 +156,11 @@ export type Options = {
 	readonly preserveConsecutiveUppercase?: boolean;
 
 	/**
-	Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
+	Exclude children at the given object paths in dot-notation from being camel-cased. The paths use the input key casing, so for example, with an object like `{a_b: {c_d: '🦄'}}`, the object path to reach the unicorn is `'a_b.c_d'`.
+
+	This option only has an effect together with the `deep` option.
+
+	The key at a stopped path is still camel-cased. Only its children are left alone.
 
 	@default []
 

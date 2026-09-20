@@ -126,11 +126,13 @@ camelcaseKeys({'foo-BAR': true}, {preserveConsecutiveUppercase: false});
 Type: `string[]`\
 Default: `[]`
 
-Exclude children at the given object paths in dot-notation from being camel-cased.
+Exclude children at the given object paths in dot-notation from being camel-cased. This option only has an effect together with the `deep` option.
+
+The paths use the input key casing, so for example, with an object like `{a_b: {c_d: '🦄'}}`, the object path to reach the unicorn is `'a_b.c_d'`.
+
+The key at a stopped path is still camel-cased. Only its children are left alone.
 
 For correct TypeScript types when using this option, add `as const` to the array.
-
-For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
 ```js
 import camelcaseKeys from 'camelcase-keys';

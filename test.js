@@ -139,6 +139,76 @@ test('stopPaths works with arrays', t => {
 	);
 });
 
+test('stopPaths option camelizes the key at the stop path', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({'foo-bar': {'baz-qux': 1, qux_quux: 2}}, {deep: true, stopPaths: ['foo-bar']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: {'baz-qux': 1, qux_quux: 2}},
+	);
+});
+
+test('stopPaths option accepts multiple paths', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({one_two: {a_b: 1}, three_four: {c_d: 2}, five_six: {e_f: 3}}, {deep: true, stopPaths: ['one_two', 'three_four']}),
+		// eslint-disable-next-line camelcase
+		{oneTwo: {a_b: 1}, threeFour: {c_d: 2}, fiveSix: {eF: 3}},
+	);
+});
+
+test('stopPaths option has no effect without the `deep` option', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: {one_two: true}}, {stopPaths: ['foo_bar']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: {one_two: true}},
+	);
+});
+
+test('stopPaths option ignores paths that do not exist', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: {one_two: true}}, {deep: true, stopPaths: ['nope.nope']}),
+		{fooBar: {oneTwo: true}},
+	);
+});
+
+test('stopPaths option does not include array indices in paths', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: [{baz_qux: {one_two: true}}]}, {deep: true, stopPaths: ['foo_bar.0.baz_qux']}),
+		{fooBar: [{bazQux: {oneTwo: true}}]},
+	);
+});
+
+test('stopPaths option applies through multiple array levels', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({q_w_e: [[{foo_bar: {one_two: 1}}]]}, {deep: true, stopPaths: ['q_w_e.foo_bar']}),
+		// eslint-disable-next-line camelcase
+		{qWE: [[{fooBar: {one_two: 1}}]]},
+	);
+});
+
+test('stopPaths option uses the input key casing', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: {one_two: {three_four: true}}}, {deep: true, pascalCase: true, stopPaths: ['foo_bar.one_two']}),
+		// eslint-disable-next-line camelcase
+		{FooBar: {OneTwo: {three_four: true}}},
+	);
+});
+
+test('stopPaths option works together with the `exclude` option', t => {
+	t.deepEqual(
+		// eslint-disable-next-line camelcase
+		camelcaseKeys({foo_bar: {one_two: true}, baz_qux: {three_four: true}}, {deep: true, exclude: ['baz_qux'], stopPaths: ['foo_bar']}),
+		// eslint-disable-next-line camelcase
+		{fooBar: {one_two: true}, baz_qux: {threeFour: true}},
+	);
+});
+
 test('preserveConsecutiveUppercase option only', t => {
 	// eslint-disable-next-line camelcase
 	t.true(camelcaseKeys({new_foo_BAR: true}, {preserveConsecutiveUppercase: true}).newFooBAR);

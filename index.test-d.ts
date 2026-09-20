@@ -79,9 +79,72 @@ expectType<{topLevel: {fooBar: {'bar-baz': boolean}}; fooFoo: boolean}>(camelcas
 	{deep: true, stopPaths: ['top-level.foo-bar'] as const},
 ));
 
-expectAssignable<Record<string, string>>(camelcaseKeys({} as Record<string, string>));
+// A `stopPath` through an array must keep the parent path (issue #65)
+expectType<{foo: Array<{bar: {baz_qux: string}}>}>(camelcaseKeys(
+	{foo: [{bar: {baz_qux: 'value'}}]},
+	{deep: true, stopPaths: ['foo.bar'] as const},
+));
+const nestedArrayWithStopPath: {q_w_e: Array<Array<{foo_bar: {one_two: number}}>>} = {q_w_e: [[{foo_bar: {one_two: 1}}]]};
+expectType<{qWE: Array<Array<{fooBar: {one_two: number}}>>}>(camelcaseKeys(
+	nestedArrayWithStopPath,
+	{deep: true, stopPaths: ['q_w_e.foo_bar'] as const},
+));
+expectType<{myItems: Array<{nestedObj: {deep_value: number}}>}>(camelcaseKeys(
+	{my_items: [{nested_obj: {deep_value: 1}}, {nested_obj: {deep_value: 2}}]},
+	{deep: true, stopPaths: ['my_items.nested_obj'] as const},
+));
+expectType<Array<{userName: string; userMeta: {created_at: string}}>>(camelcaseKeys(
+	[{user_name: 'john', user_meta: {created_at: '2023'}}],
+	{deep: true, stopPaths: ['user_meta'] as const},
+));
 
-expectAssignable<Record<string, string>>(camelcaseKeys({} as Record<string, string>, {deep: true}));
+// Only the given subtree is stopped
+expectType<{aB: number; aC: {cD: number; cE: {e_f: number}}}>(camelcaseKeys(
+	{a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}},
+	{deep: true, stopPaths: ['a_c.c_e'] as const},
+));
+expectType<{fooBar: {bar_baz: {qux_quux: boolean}}}>(camelcaseKeys(
+	{foo_bar: {bar_baz: {qux_quux: true}}},
+	{deep: true, stopPaths: ['foo_bar'] as const},
+));
+expectType<{oneTwo: {a_b: number}; threeFour: {c_d: number}; fiveSix: {eF: number}}>(camelcaseKeys(
+	{one_two: {a_b: 1}, three_four: {c_d: 2}, five_six: {e_f: 3}},
+	{deep: true, stopPaths: ['one_two', 'three_four'] as const},
+));
+expectType<{fooBar: {oneTwo: boolean}}>(camelcaseKeys(
+	{foo_bar: {one_two: true}},
+	{deep: true, stopPaths: ['nope.nope'] as const},
+));
+
+// `stopPaths` has no effect without `deep`
+expectType<{fooBar: {one_two: boolean}}>(camelcaseKeys(
+	{foo_bar: {one_two: true}},
+	{stopPaths: ['foo_bar'] as const},
+));
+
+// `stopPaths` combined with other options
+expectType<{FooBar: {one_two: boolean}}>(camelcaseKeys(
+	{foo_bar: {one_two: true}},
+	{deep: true, pascalCase: true, stopPaths: ['foo_bar'] as const},
+));
+expectType<{fooBAR: {bar_baz: boolean}}>(camelcaseKeys(
+	{foo_BAR: {bar_baz: true}},
+	{deep: true, preserveConsecutiveUppercase: true, stopPaths: ['foo_BAR'] as const},
+));
+expectType<{foo_bar: {one_two: true}; bazQux: {threeFour: boolean}}>(camelcaseKeys(
+	{foo_bar: {one_two: true}, baz_qux: {three_four: true}},
+	{deep: true, exclude: ['foo_bar'] as const, stopPaths: ['foo_bar'] as const},
+));
+expectType<{fooBar: Array<{bar: {baz_qux: string}}>}>(camelcaseKeys(
+	{foo_bar: [{bar: {baz_qux: 'value'}}]},
+	{deep: true, stopPaths: ['foo_bar.bar'] as const},
+));
+
+const emptyRecord: Record<string, string> = {};
+
+expectAssignable<Record<string, string>>(camelcaseKeys(emptyRecord));
+
+expectAssignable<Record<string, string>>(camelcaseKeys(emptyRecord, {deep: true}));
 
 type SomeObject = {
 	someProperty: string;
@@ -160,9 +223,9 @@ expectType<
 	>
 >(camelcaseKeys(nestedWithStopPathData, {deep: true, stopPaths}));
 
-expectAssignable<CamelCaseKeys<Record<string, string>>>(camelcaseKeys({} as Record<string, string>));
+expectAssignable<CamelCaseKeys<Record<string, string>>>(camelcaseKeys(emptyRecord));
 
-expectAssignable<CamelCaseKeys<Record<string, string>, true>>(camelcaseKeys({} as Record<string, string>, {deep: true}));
+expectAssignable<CamelCaseKeys<Record<string, string>, true>>(camelcaseKeys(emptyRecord, {deep: true}));
 
 expectType<CamelCaseKeys<SomeObject>>(camelcaseKeys(someObject));
 expectType<CamelCaseKeys<SomeObject[]>>(camelcaseKeys([someObject]));
